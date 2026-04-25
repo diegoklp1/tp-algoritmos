@@ -31,10 +31,28 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="archivos/files.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="files.h" />
+		<Unit filename="juego.h" />
+		<Unit filename="juego/entidades.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="juego/mapa.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="juego/menu.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="main.h" />
+		<Unit filename="tda.h" />
+		<Unit filename="tda/pila.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
