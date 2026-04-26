@@ -34,8 +34,12 @@
 		<Unit filename="archivos/files.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="config.txt" />
 		<Unit filename="files.h" />
 		<Unit filename="juego.h" />
+		<Unit filename="juego/config.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="juego/entidades.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -45,14 +49,26 @@
 		<Unit filename="juego/menu.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="juego/utilidades.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="main.h" />
 		<Unit filename="tda.h" />
+		<Unit filename="tda/cola.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tda/listaDE.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="tda/pila.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="tda_headers/arbol.h" />
+		<Unit filename="tda_headers/cola.h" />
+		<Unit filename="tda_headers/listaDE.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
