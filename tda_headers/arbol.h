@@ -1,3 +1,6 @@
+#ifndef ARBOL_H_INCLUDED
+#define ARBOL_H_INCLUDED
+
 #include "../tda.h"
 
 #define reservarMemoriaNodo(X, Y, Z, W) ( \
@@ -15,3 +18,6 @@ typedef struct sNodoArbol
 typedef tNodoArbol* tArbolBinBusq;
 
 int insertarArbolBinBusq(tArbolBinBusq* p, const void* d, unsigned tam, int (*cmp)(const void*, const void*));
+
+
+#endif // ARBOL_H_INCLUDED

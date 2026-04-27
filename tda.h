@@ -6,6 +6,7 @@
 #include <string.h>
 #define minimo(a,b) (((a) <= (b)) ? (a) : (b))
 
+// actualmente esta funcion no la estoy usando
 #define reservarMemoriaNodo(X, Y, Z, W) ( \
                                          ( ( X ) = (typeof( X ))malloc( Y ) ) == NULL || \
                                          ( ( Z ) = malloc( W ) ) == NULL ? \
