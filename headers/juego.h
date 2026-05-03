@@ -40,13 +40,14 @@ typedef struct {
 } Config;
 
 // =================================================================
-// EL MAPA Y LA LISTA (Innegociable la estructura, flexible el contenido)
+// EL MAPA Y LA LISTA
 // =================================================================
-typedef struct NodoRuta {
-    int numero_posicion;  // Ej: 1, 2, 3... útil para imprimir "01:[I J]"
-    char tipo_casilla[6];    // DECISIÓN: Usamos 'I', 'S', 'P', 'V', 'O', 'T', '.' 
-    
-} NodoRuta; // ESTA VA A SER LA INFO QUE VA A CONTENER CADA CASILLERO QUE CORRESPONDE AL CAMPO *INFO DE LA LISTA DOBLEMENTE ENLAZADA
+typedef struct
+{
+    int pos;
+    char terreno;
+    char caracter;
+} NodoRuta;  // ESTA VA A SER LA INFO QUE VA A CONTENER CADA CASILLERO QUE CORRESPONDE AL CAMPO *INFO DE LA LISTA DOBLEMENTE ENLAZADA
 
 // =================================================================
 // ENTIDADES EN PARTIDA
