@@ -26,13 +26,13 @@ void mostrarPos(const void* dato, FILE* donde) {
 int compararPosicion(const void* a, const void* b) {
     NodoRuta posA = *(NodoRuta*)a;
     NodoRuta posB = *(NodoRuta*)b;
-    return posA.pos - posB.pos;
+    return (posA.pos == posB.pos) ? 1 : 0;
 }
 
 int compararTipo(const void* a, const void* b) {
     NodoRuta posA = *(NodoRuta*)a;
     NodoRuta posB = *(NodoRuta*)b;
-    return posA.caracter - posB.caracter;
+    return (posA.caracter == posB.caracter) ? 1 : 0;
 }
 
 int accionTipo(void** elemAModif, unsigned* tamInfoAModif, const void* elem, unsigned tamInfo) {

@@ -183,7 +183,7 @@ int buscarElementoLista(tListaCD* p, void* d, unsigned cantBytes, int(*comparar)
     tNodo* act = *p;
 
     do {
-        if (comparar(act->info, d) == 0) {
+        if (comparar(act->info, d) == 1) {
             memcpy(elem, act->info, minimo(cantBytes, act->tamInfo));
             return 1;
         }
@@ -209,7 +209,7 @@ int modificarValor(
     tNodo* act = *p;
 
     do {
-        if (comparar(act->info, d) == 0)
+        if (comparar(act->info, d) == 1)
             return accion(&act->info, &act->tamInfo, datosAModif, cantBytes);
 
         act = act->sig;
