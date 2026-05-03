@@ -1,1 +1,1 @@
-#include "../juego.h"
+#include "../headers/juego.h"

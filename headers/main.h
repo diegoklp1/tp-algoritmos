@@ -11,7 +11,6 @@
 #define NOMBRE_CONFIG "config.txt"
 
 #define CLA_DUP 0
-#define SIN_MEM 0
 #define ERROR_ARCH 0
 #define TODO_BIEN 1
 

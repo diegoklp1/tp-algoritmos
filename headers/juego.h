@@ -90,4 +90,7 @@ typedef struct {
     int partidas_jugadas;
 } JugadorRegistro;
 
+int leerConfig(Config* configuracion);
+void imprimirConfig(const Config* c);
+
 #endif // JUEGO_H_INCLUDED

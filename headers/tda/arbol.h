@@ -1,7 +1,7 @@
 #ifndef ARBOL_H_INCLUDED
 #define ARBOL_H_INCLUDED
 
-#include "../tda.h"
+#include "tda.h"
 
 #define reservarMemoriaNodo(X, Y, Z, W) ( \
                                          ( ( X ) = (typeof( X ))malloc( Y ) ) == NULL || \

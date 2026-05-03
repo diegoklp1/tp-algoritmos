@@ -1,5 +1,5 @@
-#include "../juego.h"
-#include "../main.h"
+#include "../headers/juego.h"
+#include "../headers/main.h"
 #define NOMBRE_ARCHIVO "caravana.txt"
 #define NOMBRE_CONFIG "config.txt"
 

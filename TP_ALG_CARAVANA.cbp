@@ -35,8 +35,8 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="config.txt" />
-		<Unit filename="files.h" />
-		<Unit filename="juego.h" />
+		<Unit filename="headers/files.h" />
+		<Unit filename="headers/juego.h" />
 		<Unit filename="juego/config.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -55,20 +55,21 @@
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="main.h" />
-		<Unit filename="tda.h" />
+		<Unit filename="headers/main.h" />
+		<Unit filename="headers/mapa.h" />
+		<Unit filename="headers/tda/tda.h" />
 		<Unit filename="tda/cola.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="tda/listaDE.c">
+		<Unit filename="tda/listaCDE.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="tda/pila.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="tda_headers/arbol.h" />
-		<Unit filename="tda_headers/cola.h" />
-		<Unit filename="tda_headers/listaDE.h" />
+		<Unit filename="headers/tda/arbol.h" />
+		<Unit filename="headers/tda/cola.h" />
+		<Unit filename="headers/tda/listaCDE.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

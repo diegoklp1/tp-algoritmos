@@ -1,6 +1,8 @@
 #ifndef COLA_H_INCLUDED
 #define COLA_H_INCLUDED
-#include "../tda.h"
+#include "tda.h"
+#include "../main.h"
+
 
 typedef struct sNodo
 {

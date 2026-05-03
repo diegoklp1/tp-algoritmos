@@ -1,4 +1,4 @@
-#include "../tda_headers/cola.h"
+#include "../headers/tda/cola.h"
 void crearCola(tCola* p) {
     p->pri = NULL;
     p->ult = NULL;
@@ -25,12 +25,13 @@ int ponerEnCola(tCola* p, const void* d, unsigned cantBytes) {
     else
         p->pri = nue;
     p->ult = nue;
-    return 1;
+    return TODO_BIEN;
 }
 int verPrimeroCola(const tCola* p, void *d, unsigned cantBytes) {
     if(p->pri == NULL)
         return 0;
     memcpy(d, p->pri->info, minimo(cantBytes, p->pri->tamInfo));
+    return TODO_BIEN;
 }
 int colaVacia(const tCola* p) {
     return p->pri == NULL;
