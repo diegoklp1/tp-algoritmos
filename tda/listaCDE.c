@@ -14,7 +14,7 @@ int listaVaciaCD(const tListaCD *p)
 int listaLlenaCD(const tListaCD *p, unsigned cantBytes)
 {
 
-    tNodo *aux = (tNodo*)malloc(sizeof(tNodo));
+    tNodoLCDE *aux = (tNodoLCDE*)malloc(sizeof(tNodoLCDE));
     void *info = malloc(cantBytes);
     free(aux);
     free(info);
@@ -25,15 +25,15 @@ void vaciarListaCD(tListaCD *p)
 {
     if (*p == NULL) return;
 
-    tNodo *act = *p;
-    tNodo *ultimo = (*p)->ant;
+    tNodoLCDE*act = *p;
+    tNodoLCDE*ultimo = (*p)->ant;
 
     // pongo el sig del último en null para saber hasta donde parar.
     ultimo->sig = NULL;
 
     // recorro hasta que sig* del nodo en que esté, sea NULL.
     while (act) {
-        tNodo *aux = act;
+        tNodoLCDE *aux = act;
         act = act->sig;
         free(aux->info);
         free(aux);
@@ -45,7 +45,7 @@ void vaciarListaCD(tListaCD *p)
 int ponerAlComienzoCD(tListaCD *p, const void *d, unsigned cantBytes)
 {
 
-    tNodo* nue = (tNodo *)malloc(sizeof(tNodo));
+    tNodoLCDE * nue = (tNodoLCDE *)malloc(sizeof(tNodoLCDE ));
     if (!nue) return 0;
 
     if (!(nue->info = malloc(cantBytes))) {
@@ -61,7 +61,7 @@ int ponerAlComienzoCD(tListaCD *p, const void *d, unsigned cantBytes)
         nue->ant = nue;
         *p = nue;
     } else {
-        tNodo *ultimo = (*p)->ant;
+        tNodoLCDE *ultimo = (*p)->ant;
         nue->sig = *p;         //el siguiente del nuevo es el actual primero
         nue->ant = ultimo;     //el anterior del nuevo es el último
 
@@ -75,7 +75,7 @@ int ponerAlComienzoCD(tListaCD *p, const void *d, unsigned cantBytes)
 
 int ponerAlFinalCD(tListaCD *p, const void *d, unsigned cantBytes)
 {
-    tNodo *nue = (tNodo *)malloc(sizeof(tNodo));
+   tNodoLCDE *nue = (tNodoLCDE *)malloc(sizeof(tNodoLCDE));
     if (!nue) return 0;
 
     if (!(nue->info = malloc(cantBytes))) {
@@ -91,7 +91,7 @@ int ponerAlFinalCD(tListaCD *p, const void *d, unsigned cantBytes)
         nue->ant = nue;
         *p = nue;
     } else {
-        tNodo *ultimo = (*p)->ant;
+        tNodoLCDE *ultimo = (*p)->ant;
 
         //Lo mismo que para poner al inicio esta parte
         nue->sig = *p;
@@ -108,14 +108,14 @@ int sacarPrimeroListaCD(tListaCD *p, void *d, unsigned cantBytes)
 {
     if (*p == NULL) return 0;
 
-    tNodo *aux = *p;//*p apunta al primero siempre en esta estructura
+    tNodoLCDE *aux = *p;//*p apunta al primero siempre en esta estructura
     memcpy(d, aux->info, minimo(cantBytes, aux->tamInfo));
 
     if (aux->sig == aux) {
         //si era el unico en la lista, queda vacia
         *p = NULL;
     } else {
-        tNodo *ultimo = aux->ant;
+        tNodoLCDE *ultimo = aux->ant;
         *p = aux->sig; // vamos a sacar el primero, entonces actualizo *p con el siguiente. pasa a ser el primero.
 
         // en esta parte reconecto (-1) con (1), suponiendo que tenia una lista de (-1) <-> (0) <-> (1). y (0) era el primero.
@@ -130,14 +130,14 @@ int sacarPrimeroListaCD(tListaCD *p, void *d, unsigned cantBytes)
 int sacarUltimoListaCD(tListaCD *p, void *d, unsigned cantBytes)
 {
     if (*p == NULL) return 0;
-    tNodo *elim = (*p)->ant;
+   tNodoLCDE *elim = (*p)->ant;
     memcpy(d, elim->info, minimo(cantBytes, elim->tamInfo));
 
     if (elim->sig == elim) {
         //si era el unico elemento, queda vacia la lista.
         *p = NULL;
     } else {
-        tNodo *nuevoUltimo = elim->ant; // El nodo anterior al que vamos a borrar
+        tNodoLCDE *nuevoUltimo = elim->ant; // El nodo anterior al que vamos a borrar
 
         // en esta parte reconecto (-2) con (1), suponiendo que tenia una lista de (-2) <-> (-1) <-> (1). y (-1) era el ultimo.
         nuevoUltimo->sig = *p;
@@ -154,7 +154,7 @@ void mostrarListaCD(const tListaCD *p, void(*mostrar)(const void*))
         printf("Lista vacia.\n");
         return;
     }
-    tNodo* act = *p;
+    tNodoLCDE * act = *p;
 
     do {
         mostrar(act->info);
@@ -168,7 +168,7 @@ void mostrarListaArchCD(const tListaCD *p, FILE* donde, void(*mostrar)(const voi
         printf("Lista vacia.\n");
         return;
     }
-    tNodo* act = *p;
+    tNodoLCDE* act = *p;
 
     do {
         mostrar(act->info, donde);
@@ -180,7 +180,7 @@ int buscarElementoLista(tListaCD* p, void* d, unsigned cantBytes, int(*comparar)
     if (*p == NULL)
         return 0;
 
-    tNodo* act = *p;
+    tNodoLCDE* act = *p;
 
     do {
         if (comparar(act->info, d) == 1) {
@@ -206,7 +206,7 @@ int modificarValor(
     if (*p == NULL)
         return 0;
 
-    tNodo* act = *p;
+    tNodoLCDE* act = *p;
 
     do {
         if (comparar(act->info, d) == 1)

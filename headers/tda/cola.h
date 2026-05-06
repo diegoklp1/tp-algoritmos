@@ -2,13 +2,11 @@
 #define COLA_H_INCLUDED
 #include "tda.h"
 #include "../main.h"
-
-
-typedef struct sNodo
+typedef struct sNodoCola
 {
     void *info;
     unsigned tamInfo;
-    struct sNodo *sig;
+    struct sNodoCola *sig;
 } tNodo;
 
 typedef struct

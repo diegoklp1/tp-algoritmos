@@ -84,7 +84,7 @@ void agregarTerreno(tListaCD* lista, char tipoTerreno, int cantidadMaxima, int n
     }
 }
 
-void agregarPersonaje(tListaCD* lista, char elemento, int cantidadMaxima, int numeroEspacios) {
+void agregarPersonaje(tListaCD* lista, char elemento, int cantidadMaxima, int numeroEspacios,Bandido* arrayBandidos) {
     for(int i = 0; i < cantidadMaxima; i++) {
         int numero;
         NodoRuta pos;
@@ -101,6 +101,9 @@ void agregarPersonaje(tListaCD* lista, char elemento, int cantidadMaxima, int nu
 
         NodoRuta nuevo = {numero, VACIO, elemento};
         modificarValor(lista, &pos, sizeof(NodoRuta), compararPosicion, accionTipo, &nuevo);
+        //Inicializamos al bandido, le damos su id y su posicion dentro del tablero
+        (arrayBandidos + i)->id = i + 1;
+        (arrayBandidos + i)->posicion_actual = obtenerNodoPorPosicion(lista, numero);
     }
 }
 
@@ -122,33 +125,57 @@ void movimientoJugador(tListaCD* lista, short cantidad) {
     //Pongo vacio el valor de la posicion del jugador
     modificarValor(lista, &jugadorNodo, sizeof(NodoRuta), compararPosicion, accionTipo, &nuevoVacio);
 }
+tNodoLCDE* obtenerNodoPorPosicion(tListaCD* lista, int posicionBuscada) {
+    if (*lista == NULL)
+        {
+        return NULL;
+        }
 
-int generarTablero(Config* c)
+    tNodoLCDE* aux = *lista;
+    if (((NodoRuta*)aux->info)->pos == posicionBuscada)
+        {
+        return aux;
+        }
+        aux=aux->sig; //si no es la primera posicion, buscamos el resto
+    while (aux != *lista)
+    {
+        NodoRuta* info = (NodoRuta*)aux->info;
+        if (info->pos == posicionBuscada)
+        {
+            return aux; //Encontramos el nodo
+        }
+        aux = aux->sig;
+    }
+
+    return NULL;
+}
+int generarTablero(Config* c,Bandido* arrayBandidos,tListaCD *lista)
 {
    FILE* tableroArch = fopen(NOMBRE_ARCHIVO, "w+t");
    if(!tableroArch)
    {
        return ERROR;
    }
-    tListaCD lista;
-    crearListaCD(&lista);
+    ///////////tListaCD lista;
+    ////////////7crearListaCD(&lista);
     NodoRuta t = {1, VACIO, JUGADOR};
-    ponerAlComienzoCD(&lista, &t, sizeof(NodoRuta));
+    ponerAlComienzoCD(lista, &t, sizeof(NodoRuta));
     for(int i=2; i<c->cantidad_posiciones; i++)
     {
         NodoRuta t = {i, VACIO, VACIO};
-        ponerAlFinalCD(&lista, &t, sizeof(NodoRuta));
+        ponerAlFinalCD(lista, &t, sizeof(NodoRuta));
     }
     NodoRuta f = {c->cantidad_posiciones, SALIDA, VACIO};
-    ponerAlFinalCD(&lista, &f, sizeof(NodoRuta));
+    ponerAlFinalCD(lista, &f, sizeof(NodoRuta));
 
-    agregarPersonaje(&lista, BANDIDO, c->maximo_bandidos, c->cantidad_posiciones);
-    agregarTerreno(&lista, VIDA_EXTRA, c->maximo_vidas_extra, c->cantidad_posiciones);
-    agregarTerreno(&lista, PREMIO, c->maximo_premios, c->cantidad_posiciones);
-    agregarTerreno(&lista, TORMENTA, c->maximo_tormentas, c->cantidad_posiciones);
-    agregarTerreno(&lista, OASIS, c->maximo_oasis, c->cantidad_posiciones);
-    movimientoJugador(&lista, 5);
-    mostrarListaArchCD(&lista, stdout, mostrarPos);
-    vaciarListaCD(&lista);
+    agregarPersonaje(lista, BANDIDO, c->maximo_bandidos, c->cantidad_posiciones,arrayBandidos);
+    agregarTerreno(lista, VIDA_EXTRA, c->maximo_vidas_extra, c->cantidad_posiciones);
+    agregarTerreno(lista, PREMIO, c->maximo_premios, c->cantidad_posiciones);
+    agregarTerreno(lista, TORMENTA, c->maximo_tormentas, c->cantidad_posiciones);
+    agregarTerreno(lista, OASIS, c->maximo_oasis, c->cantidad_posiciones);
+    //movimientoJugador(lista, 5);
+    mostrarListaArchCD(lista, stdout, mostrarPos);
+    //vaciarListaCD(&lista);
     fclose(tableroArch);
+    return 1;
 }

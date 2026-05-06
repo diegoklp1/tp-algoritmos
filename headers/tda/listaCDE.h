@@ -2,16 +2,15 @@
 #define LISTACDE_H_INCLUDED
 
 #include "tda.h"
-
 typedef struct sNodo
 {
     void* info;
     unsigned tamInfo;
     struct sNodo *sig;
     struct sNodo *ant;
-} tNodo;
+} tNodoLCDE;
 
-typedef tNodo* tListaCD;
+typedef tNodoLCDE* tListaCD;
 
 void crearListaCD(tListaCD *p);
 int listaVaciaCD(const tListaCD *p);
