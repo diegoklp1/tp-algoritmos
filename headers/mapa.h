@@ -9,5 +9,5 @@ void mostrarTablero(char tablero[25]);
 int generarTablero(Config* c,Bandido* bands,tListaCD *lista);
 void mostrarPos(const void* dato);
 int testTablero(Config* c);
-
+void visualizarYGenerarTablero();
 #endif // MAPA_H_INCLUDED

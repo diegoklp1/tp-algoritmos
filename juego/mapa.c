@@ -179,3 +179,56 @@ int generarTablero(Config* c,Bandido* arrayBandidos,tListaCD *lista)
     fclose(tableroArch);
     return 1;
 }
+
+// VISUALIZACIÓN Y GENERACIÓN DEL TABLERO
+
+void visualizarYGenerarTablero() {
+    const char* tableroPrueba[] = { //harcodeado 25
+        "[I J]",
+        ".",
+        "P",
+        "T",
+        ".",
+        "B",
+        "O",
+        ".",
+        "P",
+        ".",
+        "V",
+        ".",
+        "S",
+        "T",
+        ".",
+        "O",
+        "B",
+        ".",
+        "P",
+        ".",
+        "T",
+        ".",
+        ".",
+        ".",
+        "."
+    };
+    int cantidad_posiciones = 25,i;
+    FILE *archTablero;
+    printf("\n========================================\n"); // esto va cuando se pone "nueva partda"
+    printf("       ESTADO ACTUAL DEL TABLERO        \n");
+    printf("========================================\n");
+
+    for (i=0; i < cantidad_posiciones; i++) {
+        printf("%s\n", tableroPrueba[i]);
+    }
+    archTablero = fopen("caravana.txt", "wt");
+    if(!archTablero)
+    {
+        printf("no se pudo abrir el archivo");
+        exit(1);
+    }
+
+        for (int i = 0; i < cantidad_posiciones; i++) {
+            fprintf(archTablero, "%02d:%s\n", i + 1, tableroPrueba[i]);
+        }
+        fclose(archTablero);
+}
+

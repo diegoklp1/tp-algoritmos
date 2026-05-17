@@ -99,6 +99,11 @@ typedef struct {
 } MovimientoCola;
 int leerConfig(Config* configuracion);
 void imprimirConfig(const Config* c);
+int mostrarMenu();
+void verRanking();
+int buscarJugador(const char* nombre);
+void altaJugador(const char* nombre);
+void iniciarTablero(const char* nombre);
 
 tNodoLCDE* destinoJugador(tNodoLCDE* posActual, int pasos, int direccion);
 tNodoLCDE* destinoBandido(tNodoLCDE* posActual,tNodoLCDE* destJugador ,int pasosBandido,int casillas);

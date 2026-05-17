@@ -5,11 +5,14 @@
 
 int main()
 {
+    char nombreJugador[21];
     //printf("HOLA MUNDO");
     srand(time(NULL));
 
     Config configuracion;
     leerConfig(&configuracion);
+    while(mostrarMenu()==1){
+    ingresarYValidarNombre(nombreJugador);
 
     tListaCD mapa;
     crearListaCD(&mapa);
@@ -78,5 +81,6 @@ int main()
         printf("Mala suerte! los bandidos acabaron contigo. Partida terminada!");
     vaciarCola(&colaTurnos);
     vaciarListaCD(&mapa);
+    }
     return 0;
 }
