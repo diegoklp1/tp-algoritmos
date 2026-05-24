@@ -6,8 +6,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include "../headers/tda/listaCDE.h"
-#include "../headers/tda/cola.h"
+#include "tda/listaCDE.h"
+#include "tda/cola.h"
+#include "indice.h"
+
 // REPRESENTACIÓN DE ESTADO DE CASILLERO
 #define JUGADOR        'J'
 #define INICIO         'I'
@@ -77,14 +79,14 @@ typedef struct {
 // =================================================================
 typedef struct {
     char tipo_movimiento; // 'F' (Forward) o 'B' (Backward)
-    int casillas;         // Cantidad de casillas (el valor del dado) // REVISAR SI ESTE VALOR SERÁ UNSIGNED (optimizar)
+    unsigned casillas;
 } MovimientoHistorial;
 // vamos a guardar cada movimiento en una lista (por ahora), puede haber una forma de guardar estos datos de una manera más óptima.
 
 // =================================================================
 // PERSISTENCIA Y RANKING (Para el Árbol Binario)
 // =================================================================
-// DECISIÓN: Es buena idea separar el jugador "en vivo" del que se guarda en el archivo.
+// Separamos al jugador que está jugando del que se guarda
 typedef struct {
     char nombre[50];
     int puntos_totales_historicos;
@@ -99,10 +101,6 @@ typedef struct {
 } MovimientoCola;
 int leerConfig(Config* configuracion);
 void imprimirConfig(const Config* c);
-int mostrarMenu();
-void verRanking();
-int buscarJugador(const char* nombre);
-void altaJugador(const char* nombre);
 void iniciarTablero(const char* nombre);
 
 tNodoLCDE* destinoJugador(tNodoLCDE* posActual, int pasos, int direccion);

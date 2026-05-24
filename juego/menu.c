@@ -1,7 +1,8 @@
 #include "../headers/juego.h"
 #include "../headers/mapa.h"
+#include "../headers/indice.h"
 
-int mostrarMenu()
+int mostrarMenu(tArbolBinBusq *indice)
 {
     int opcion;
     printf("========================================\n");
@@ -27,7 +28,7 @@ int mostrarMenu()
                 return 1;
                 break;
             case 2:
-                verRanking();
+                mostrarRankingAlfabetico(indice);
                 break;
             case 3:
                 printf("Saliendo del juego\n");
@@ -46,45 +47,16 @@ void ingresarYValidarNombre(char* nombre)
     while (!valido) {
         printf("Ingrese su nombre de jugador (max 20 caracteres): ");
         if (fgets(nombre, 21, stdin) != NULL) {
-            // Remover el salto de línea generado por fgets
+            // Remover el salto de lï¿½nea generado por fgets
             nombre[strcspn(nombre, "\n")] = 0;
 
-            // Validar que el nombre no esté vacío
+            // Validar que el nombre no estï¿½ vacï¿½o
             if (strlen(nombre) > 0) {
                 valido = 1;
             } else {
-                printf("Error: El nombre no puede estar vacío.\n");
+                printf("Error: El nombre no puede estar vacï¿½o.\n");
             }
         }
     }
-
-    // stubs para gestionar los datos
-    if (buscarJugador(nombre)) {
-        printf("Bienvenido nuevamente, %s\n", nombre);
-    } else {
-        printf("Jugador nuevo detectado. Procediendo al alta...\n");
-        altaJugador(nombre);
-        printf("Jugador '%s' registrado con exito.\n", nombre);
-    }
 }
 
-// stubs
-
-void verRanking()
-{
-    printf("\n--- RANKING DE JUGADORES ---\n");
-    printf("recorriendo el arbol binario de búsqueda para mostrar puntuaciones...\n"); // stub
-}
-
-int buscarJugador(const char* nombre)
-{
-    printf("Buscando al jugador '%s' en el indice (Arbol Binario)...\n", nombre);
-    // Retornamos 0 para simular que no existe y probar el alta.
-    // Cambiar a 1 para simular que el jugador ya existe.
-    return 0;
-}
-
-void altaJugador(const char* nombre)
- {
-    printf("Escribiendo al jugador '%s' en el archivo binario y actualizando el arbol...\n", nombre); //stub
-}

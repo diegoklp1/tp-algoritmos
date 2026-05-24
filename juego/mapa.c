@@ -16,11 +16,9 @@ int generarMovimiento()
 
 void mostrarPos(const void* dato, FILE* donde) {
     NodoRuta* pos = (NodoRuta*)dato;
-    if(pos == NULL) {
-        printf("");
-    } else {
+    if(pos == NULL)
+        return;
     fprintf(donde, "%02d %c %c\n", pos->pos, pos->terreno, pos->caracter);
-    }
 }
 
 int compararPosicion(const void* a, const void* b) {

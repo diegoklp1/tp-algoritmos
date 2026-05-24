@@ -7,7 +7,7 @@ int generarNumeroEntre(int ini, int fin);
 int generarMovimiento();
 void mostrarTablero(char tablero[25]);
 int generarTablero(Config* c,Bandido* bands,tListaCD *lista);
-void mostrarPos(const void* dato);
+void mostrarPos(const void* dato,FILE* donde);
 int testTablero(Config* c);
 void visualizarYGenerarTablero();
 #endif // MAPA_H_INCLUDED

@@ -34,11 +34,14 @@
 		<Unit filename="archivos/files.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="caravana.txt" />
 		<Unit filename="config.txt" />
 		<Unit filename="headers/files.h" />
+		<Unit filename="headers/indice.h" />
 		<Unit filename="headers/juego.h" />
 		<Unit filename="headers/main.h" />
 		<Unit filename="headers/mapa.h" />
+		<Unit filename="headers/menu.h" />
 		<Unit filename="headers/tda/arbol.h" />
 		<Unit filename="headers/tda/cola.h" />
 		<Unit filename="headers/tda/listaCDE.h" />
@@ -47,6 +50,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="juego/entidades.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="juego/indice.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="juego/mapa.c">
@@ -59,6 +65,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="tda/arbol.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="tda/cola.c">
