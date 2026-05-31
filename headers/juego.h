@@ -49,7 +49,8 @@ typedef struct
 {
     int pos;
     char terreno;
-    char caracter;
+    bool hay_jugador;
+    int cant_bandidos;
 } NodoRuta;  // ESTA VA A SER LA INFO QUE VA A CONTENER CADA CASILLERO QUE CORRESPONDE AL CAMPO *INFO DE LA LISTA DOBLEMENTE ENLAZADA
 
 // =================================================================
@@ -79,7 +80,8 @@ typedef struct {
 // =================================================================
 typedef struct {
     char tipo_movimiento; // 'F' (Forward) o 'B' (Backward)
-    unsigned casillas;
+    unsigned casillasMovidas;//el lanzamiento ddel dado
+    unsigned casillaDestino;//en donde termine
 } MovimientoHistorial;
 // vamos a guardar cada movimiento en una lista (por ahora), puede haber una forma de guardar estos datos de una manera más óptima.
 
@@ -109,8 +111,10 @@ tNodoLCDE* obtenerNodoPorPosicion(tListaCD* lista, int posicionBuscada);
 int calcularDireccionBandido(tNodoLCDE*posActualB,tNodoLCDE*destJugador,int totalCasillas);
 tNodoLCDE* obtenerNodoPorPosicion(tListaCD* lista, int posicionBuscada);
 
-void planificarTurnoJugador(JugadorPartida* jugador,tCola* colaTurnos,tNodoLCDE** destinoFuturoJ);
+void planificarTurnoJugador(JugadorPartida* jugador,tCola* colaTurnos,tNodoLCDE** destinoFuturoJ,tCola *);
 void planificarTurnoBandidos(Bandido* bandidos, int cantBandidos, tNodoLCDE* destinoJugador, int totalCasillas, tCola* colaTurnos);
 void actualizarPosiciones(tCola *colaTurnos);
 void verificarChoques(JugadorPartida* jugador, Bandido* bandidos, int cantBandidos, tListaCD* mapa);
+void mostrarHistorialMovimientos(tCola* historial);
+
 #endif // JUEGO_H_INCLUDED

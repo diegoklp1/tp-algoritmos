@@ -16,9 +16,27 @@ int generarMovimiento()
 
 void mostrarPos(const void* dato, FILE* donde) {
     NodoRuta* pos = (NodoRuta*)dato;
-    if(pos == NULL)
-        return;
-    fprintf(donde, "%02d %c %c\n", pos->pos, pos->terreno, pos->caracter);
+    if(pos == NULL) return;
+
+    //ImprimO el numero (2 digitos), el terreno y un espacio
+    fprintf(donde, "%02d %c ", pos->pos, pos->terreno);
+
+    // Si la casilla esta sin bandidos ni jugador, imprime un punto
+    if (!pos->hay_jugador && pos->cant_bandidos == 0) {
+        fprintf(donde, ".");
+    } else {
+        // Si hay jugador, imprime la J
+        if (pos->hay_jugador) {
+            fprintf(donde, "J ");
+        }
+        // Si hay bandidos, imprime tantas B como haya
+        for (int i = 0; i < pos->cant_bandidos; i++) {
+            fprintf(donde, "B ");
+        }
+    }
+
+    // Salto de linea al final de la casilla
+    fprintf(donde, "\n");
 }
 
 int compararPosicion(const void* a, const void* b) {
@@ -27,19 +45,25 @@ int compararPosicion(const void* a, const void* b) {
     return (posA.pos == posB.pos) ? 1 : 0;
 }
 
-int compararTipo(const void* a, const void* b) {
+/*int compararTipo(const void* a, const void* b) {
     NodoRuta posA = *(NodoRuta*)a;
     NodoRuta posB = *(NodoRuta*)b;
     return (posA.caracter == posB.caracter) ? 1 : 0;
-}
+}*/
 
-int accionTipo(void** elemAModif, unsigned* tamInfoAModif, const void* elem, unsigned tamInfo) {
+/*int accionTipo(void** elemAModif, unsigned* tamInfoAModif, const void* elem, unsigned tamInfo) {
     (void)tamInfoAModif;
     (void)tamInfo;
 
     NodoRuta* posA = *(NodoRuta**)elemAModif;
     NodoRuta* posB = (NodoRuta*)elem;
     posA->caracter = posB->caracter;
+    return*/
+int accionAgregarBandido(void** elemAModif, unsigned* tamInfoAModif, const void* elem, unsigned tamInfo) {
+
+
+    NodoRuta* posA = *(NodoRuta**)elemAModif;
+    posA->cant_bandidos++;
     return 1;
 }
 
@@ -70,14 +94,14 @@ void agregarTerreno(tListaCD* lista, char tipoTerreno, int cantidadMaxima, int n
         //Hay que verificar que el terreno este vacio
         do {
             numero = generarNumeroEntre(1, numeroEspacios-1);
-            NodoRuta buscado = {numero, VACIO, VACIO};
+            NodoRuta buscado = {numero, VACIO, false,0};
 
             if(!buscarElementoLista(lista, &buscado, sizeof(NodoRuta), compararPosicion, &pos))
                 return;
 
-        } while(pos.terreno != VACIO || (pos.caracter == JUGADOR || pos.caracter == BANDIDO));
+        } while(pos.terreno != VACIO || (pos.hay_jugador == true || pos.cant_bandidos > 0));
         //Verificar si puede haber terreno y bandido en el mismo lugar
-        NodoRuta nuevo = {numero, tipoTerreno, VACIO};
+        NodoRuta nuevo = {numero, tipoTerreno, false,0};
         modificarValor(lista, &pos, sizeof(NodoRuta), compararPosicion, accionTerreno, &nuevo);
     }
 }
@@ -89,16 +113,16 @@ void agregarPersonaje(tListaCD* lista, char elemento, int cantidadMaxima, int nu
 
         do {
             numero = generarNumeroEntre(1, numeroEspacios-1);
-            NodoRuta buscado = {numero, VACIO, VACIO};
+            NodoRuta buscado = {numero, VACIO, false,0};
 
             if(!buscarElementoLista(lista, &buscado, sizeof(NodoRuta), compararPosicion, &pos))
             return;
 
-        } while(pos.caracter != VACIO && pos.terreno != VACIO);
-        //Verificar si puede haber terreno y bandido en el mismo lugar
+        } while(pos.terreno != VACIO || pos.hay_jugador == true || pos.cant_bandidos > 0);
+         //Verificar si puede haber terreno y bandido en el mismo lugar
 
-        NodoRuta nuevo = {numero, VACIO, elemento};
-        modificarValor(lista, &pos, sizeof(NodoRuta), compararPosicion, accionTipo, &nuevo);
+        NodoRuta nuevo = {numero, VACIO, false, 1};
+        modificarValor(lista, &pos, sizeof(NodoRuta), compararPosicion, accionAgregarBandido, &nuevo);
         //Inicializamos al bandido, le damos su id y su posicion dentro del tablero
         (arrayBandidos + i)->id = i + 1;
         (arrayBandidos + i)->posicion_actual = obtenerNodoPorPosicion(lista, numero);
@@ -110,7 +134,8 @@ void mostrarJugador(NodoRuta jugador) {
 }
 
 //
-void movimientoJugador(tListaCD* lista, short cantidad) {
+
+/*void movimientoJugador(tListaCD* lista, short cantidad) {
     //Chequear movimiento circular
     // int mov = generarMovimiento();
     NodoRuta jugadorNodo = {0, VACIO, JUGADOR}; //Aca guardo la posicion original del jugador
@@ -122,7 +147,7 @@ void movimientoJugador(tListaCD* lista, short cantidad) {
     NodoRuta nuevoVacio = {jugadorNodo.pos, VACIO, VACIO};
     //Pongo vacio el valor de la posicion del jugador
     modificarValor(lista, &jugadorNodo, sizeof(NodoRuta), compararPosicion, accionTipo, &nuevoVacio);
-}
+}*/
 tNodoLCDE* obtenerNodoPorPosicion(tListaCD* lista, int posicionBuscada) {
     if (*lista == NULL)
         {
@@ -156,14 +181,14 @@ int generarTablero(Config* c,Bandido* arrayBandidos,tListaCD *lista)
    }
     ///////////tListaCD lista;
     ////////////7crearListaCD(&lista);
-    NodoRuta t = {1, VACIO, JUGADOR};
+    NodoRuta t = {1, VACIO, true,0};
     ponerAlComienzoCD(lista, &t, sizeof(NodoRuta));
     for(int i=2; i<c->cantidad_posiciones; i++)
     {
-        NodoRuta t = {i, VACIO, VACIO};
+        NodoRuta t = {i, VACIO, false,0};
         ponerAlFinalCD(lista, &t, sizeof(NodoRuta));
     }
-    NodoRuta f = {c->cantidad_posiciones, SALIDA, VACIO};
+    NodoRuta f = {c->cantidad_posiciones, SALIDA, false,0};
     ponerAlFinalCD(lista, &f, sizeof(NodoRuta));
 
     agregarPersonaje(lista, BANDIDO, c->maximo_bandidos, c->cantidad_posiciones,arrayBandidos);

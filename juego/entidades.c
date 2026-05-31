@@ -57,8 +57,9 @@ int calcularDireccionBandido(tNodoLCDE*posActualB,tNodoLCDE*destJugador,int tota
         return ATRAS;
 
 }
-void planificarTurnoJugador(JugadorPartida* jugador,tCola* colaTurnos,tNodoLCDE** destinoFuturoJ){
+void planificarTurnoJugador(JugadorPartida* jugador,tCola* colaTurnos,tNodoLCDE** destinoFuturoJ,tCola *colaHistorial){
     MovimientoCola movJugador;
+    MovimientoHistorial colaLogs;
     int direccion;
     int pasos;
     printf("\n--- TU TURNO  ---\n");
@@ -70,7 +71,7 @@ void planificarTurnoJugador(JugadorPartida* jugador,tCola* colaTurnos,tNodoLCDE*
     pasos=generarNumeroEntre(1,6);
     printf("Sacaste un %d.\n",pasos);
 
-    //Pedir direcci�n
+    //Pedir direccion
     do{
         printf("Hacia donde vas? (1: Adelante, 2: Atras): ");
         scanf("%d",&direccion);
@@ -85,7 +86,22 @@ void planificarTurnoJugador(JugadorPartida* jugador,tCola* colaTurnos,tNodoLCDE*
     movJugador.entidad=jugador;
     movJugador.nodoDestino=*destinoFuturoJ;
 
+
+    colaLogs.casillasMovidas=pasos;
+    if (direccion == ADELANTE)
+    {
+        colaLogs.tipo_movimiento = 'F';
+    }
+    else
+    {
+        colaLogs.tipo_movimiento = 'B';
+    }
+
+    colaLogs.casillaDestino = ((NodoRuta*)(*destinoFuturoJ)->info)->pos;
+
+
     ponerEnCola(colaTurnos,&movJugador,sizeof(MovimientoCola));
+    ponerEnCola(colaHistorial,&colaLogs,sizeof(MovimientoHistorial));
     printf("Movimiento planificado.\n");
 }
 
@@ -98,7 +114,7 @@ void planificarTurnoBandidos(Bandido* bandidos, int cantBandidos, tNodoLCDE* des
         {
             int pasos = generarNumeroEntre(1,4);
 
-            // 2. LLAMAMOS A TU FUNCI�N (La que ya hiciste y devuelve la posici�n)
+
 
             tNodoLCDE* destinoCalculado = destinoBandido((bandidos+i)->posicion_actual, destinoJugador, pasos, totalCasillas);
 
@@ -106,7 +122,7 @@ void planificarTurnoBandidos(Bandido* bandidos, int cantBandidos, tNodoLCDE* des
             MovimientoCola movBandido;
             movBandido.tipo_entidad = BANDIDO;
             movBandido.entidad = (bandidos+i);          // Pasamos el bandido
-            movBandido.nodoDestino = destinoCalculado;  // Pasamos el nodo que calcul� tu funci�n
+            movBandido.nodoDestino = destinoCalculado;  // Pasamos el nodo que calculamos
 
             // 4. Metemos el ticket en la cola
             ponerEnCola(colaTurnos, &movBandido, sizeof(MovimientoCola));
@@ -119,38 +135,43 @@ void actualizarPosiciones(tCola* colaTurnos) {
     // Desencolamos hasta que no queden mas movimientos
     while (sacarDeCola(colaTurnos, &turnoActual, sizeof(MovimientoCola)))
     {
-
-        if (turnoActual.tipo_entidad==JUGADOR)
+        if (turnoActual.tipo_entidad == JUGADOR)
         {
             JugadorPartida* j = (JugadorPartida*)turnoActual.entidad;
 
-            if(((NodoRuta*)j->posicion_actual->info)->caracter==JUGADOR)
-            // 1. Borramos la letra vieja SOLO SI ESTABA EL JUGADOR EN ESA CASILLA
+            // 1. Quitamos al jugador de la casilla vieja
+            if (j->posicion_actual != NULL)
             {
-               ((NodoRuta*)(j->posicion_actual->info))->caracter = VACIO;
+               ((NodoRuta*)(j->posicion_actual->info))->hay_jugador = false;
             }
 
             // 2. Le damos su nueva posicion
             j->posicion_actual = turnoActual.nodoDestino;
 
-            // 3. Dibujamos la letra nueva
-            ((NodoRuta*)(j->posicion_actual->info))->caracter = JUGADOR;
-
-        }
-        else if (turnoActual.tipo_entidad==BANDIDO)
-        {
-            Bandido* b =(Bandido*)turnoActual.entidad;
-
-            if (((NodoRuta*)(b->posicion_actual->info))->caracter == BANDIDO)
+            // 3. Activamos al jugador en la casilla nueva
+            if (j->posicion_actual != NULL)
             {
-                ((NodoRuta*)(b->posicion_actual->info))->caracter = VACIO;
+                ((NodoRuta*)(j->posicion_actual->info))->hay_jugador = true;
+            }
+        }
+        else if (turnoActual.tipo_entidad == BANDIDO)
+        {
+            Bandido* b = (Bandido*)turnoActual.entidad;
+
+            // 1. Restamos al bandido de la casilla vieja
+            if (b->posicion_actual != NULL && ((NodoRuta*)(b->posicion_actual->info))->cant_bandidos > 0)
+            {
+                ((NodoRuta*)(b->posicion_actual->info))->cant_bandidos--;
             }
 
-            // 2. Le damos su nueva posici�n
+            // 2. Le damos su nueva posicion
             b->posicion_actual = turnoActual.nodoDestino;
 
-            // 3. Dibujamos el bandido nuevo
-            ((NodoRuta*)(b->posicion_actual->info))->caracter = BANDIDO;
+            // 3. Sumamos al bandido en la casilla nueva
+            if (b->posicion_actual != NULL)
+            {
+                ((NodoRuta*)(b->posicion_actual->info))->cant_bandidos++;
+            }
         }
     }
 }
@@ -158,10 +179,10 @@ void actualizarPosiciones(tCola* colaTurnos) {
 void verificarChoques(JugadorPartida* jugador, Bandido* bandidos, int cantBandidos, tListaCD* mapa)
 {
 
-    // 1. Leemos en qu� casilla est� parado el jugador AHORA
+    // 1. Leemos en que casilla esta parado el jugador AHORA
     NodoRuta* CasillaActual = ((NodoRuta*)jugador->posicion_actual->info);
     bool caiEnOasis=false;//ESTA VARIABLE LA UTILIZO PARA SABER SI TENGO UNA PROTECCION VIEJA O ES NUEVA
-    // 2. Evaluamos si est� protegido
+    // 2. Evaluamos si esta protegido
 
     if(CasillaActual->terreno == OASIS)
     {
@@ -175,13 +196,13 @@ void verificarChoques(JugadorPartida* jugador, Bandido* bandidos, int cantBandid
     for (int i = 0; i < cantBandidos; i++)
     {
 
-        if ((bandidos + i)->posicion_actual != NULL)   // Si el bandido est� vivo
+        if ((bandidos + i)->posicion_actual != NULL)   // Si el bandido esta vivo
         {
 
             if (jugador->posicion_actual == (bandidos + i)->posicion_actual)
             {
 
-                // Hubo choque, pero verificamos si est� en oasis
+                // Hubo choque, pero verificamos si esta en oasis
                 if (jugador->protegido_por_oasis==true)
                 {
                     printf("\nEl bandido %d te alcanzo, pero el oasis te protegio. Estas a salvo.\n",
@@ -190,7 +211,7 @@ void verificarChoques(JugadorPartida* jugador, Bandido* bandidos, int cantBandid
                 }
                 else
                 {
-                    // Logica normal de da�o (fuera del oasis)
+                    // Logica normal de dado (fuera del oasis)
                     printf("\nCRITICO: El bandido %d te atrapo en la casilla %d.\n",
                            (bandidos + i)->id,
                            CasillaActual->pos);
@@ -206,18 +227,19 @@ void verificarChoques(JugadorPartida* jugador, Bandido* bandidos, int cantBandid
                         }
                     }
                     if (!hayOtroBandido)
-                        ((NodoRuta*)jugador->posicion_actual->info)->caracter = VACIO;
+                        ((NodoRuta*)jugador->posicion_actual->info)->hay_jugador = false;
 
                     (bandidos + i)->posicion_actual = NULL;
-                    
-                    
+
+
                     printf("El bandido %d fue eliminado de la ruta.\n",(bandidos + i)->id);
+                    ((NodoRuta*)jugador->posicion_actual->info)->cant_bandidos--;
                     (bandidos+i)->id=-1;
-                    
+
                     if (jugador->vidas > 0)
                     {
                         jugador->posicion_actual = obtenerNodoPorPosicion(mapa, 1);
-                        ((NodoRuta*)jugador->posicion_actual->info)->caracter = JUGADOR;
+                        ((NodoRuta*)jugador->posicion_actual->info)->hay_jugador = true;
                         printf("Has sido devuelto al campamento inicial (Casilla 1).\n");
                     }
                     return;
@@ -249,7 +271,7 @@ void verificarChoques(JugadorPartida* jugador, Bandido* bandidos, int cantBandid
             printf("Atravesaste una tormenta, pero fuiste protegido por el oasis!\n");
         else
         {
-            printf("\nCa�ste en una tormenta. Pierdes tu proximo turno.\n");
+            printf("\nCaiste en una tormenta. Pierdes tu proximo turno.\n");
             jugador->pierde_proximo_turno = true;
             ((NodoRuta*)jugador->posicion_actual->info)->terreno = VACIO;
         }
@@ -258,4 +280,27 @@ void verificarChoques(JugadorPartida* jugador, Bandido* bandidos, int cantBandid
     }
     if(jugador->protegido_por_oasis==true&&caiEnOasis==false)
         jugador->protegido_por_oasis=false; //si el jugador tiene un escudo activo, y no cayo en el oasis, significa q la proteccion viene de un turno anterior, hay q desactivarla
+}
+void mostrarHistorialMovimientos(tCola* historial) {
+    MovimientoHistorial mov;
+    int turno = 1;
+
+    printf("\n------------------------------------------\n");
+    printf("        HISTORIAL DE MOVIMIENTOS        \n");
+    printf("-------------------------------------\n");
+
+    // sacarDeCola devuelve 1 si saco algo, 0 si la cola se vacio
+    while (sacarDeCola(historial, &mov, sizeof(MovimientoHistorial))) {
+
+
+        char* direccionTexto = (mov.tipo_movimiento == 'F') ? "adelante" : "atras";
+
+        printf("Turno %d: El jugador se movio %d casillas hacia %s y llego a la casilla %d.\n", turno, mov.casillasMovidas, direccionTexto, mov.casillaDestino);
+
+        turno++;
+    }
+
+
+
+    printf("-------------------------------------\n");
 }

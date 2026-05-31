@@ -32,8 +32,9 @@ int main()
         tListaCD mapa;
         crearListaCD(&mapa);
 
-        tCola colaTurnos;
+        tCola colaTurnos,colaHistorialMovs;
         crearCola(&colaTurnos);
+        crearCola(&colaHistorialMovs);
 
         Bandido listaBandidos[configuracion.maximo_bandidos];
         generarTablero(&configuracion,listaBandidos,&mapa);
@@ -51,12 +52,12 @@ int main()
             printf("\n==================================\n");
             printf("Vidas: %d\n", Jugador.vidas);
 
-            //Variable para guardar el destino del jugador y pas�rsela a los bandidos
+            //Variable para guardar el destino del jugador y pasarsela a los bandidos
             tNodoLCDE* destinoJugador = NULL;
 
             //FASE1:PLANIFICACI�N
             if(Jugador.pierde_proximo_turno==false)
-                planificarTurnoJugador(&Jugador, &colaTurnos, &destinoJugador);
+                planificarTurnoJugador(&Jugador, &colaTurnos, &destinoJugador,&colaHistorialMovs);
             else
             {
                 printf("Caiste en una tormenta! perdiste tu turno.. los bandidos avanzan hacia ti..");
@@ -92,12 +93,15 @@ int main()
         }
         else
             printf("Mala suerte! los bandidos acabaron contigo. Partida terminada!\n");
+
+
         vaciarCola(&colaTurnos);
         vaciarListaCD(&mapa);
-    }
+        mostrarHistorialMovimientos(&colaHistorialMovs);
 
+    }
     guardarIndiceJugadores(&indice);
     liberarIndiceJugadores(&indice);
-    
+
     return 0;
 }
