@@ -1,6 +1,8 @@
 #include "../headers/juego.h"
 #include "../headers/mapa.h"
 #include "../headers/indice.h"
+#include "../headers/historial.h"
+#include "../headers/menu.h"
 
 int mostrarMenu(tArbolBinBusq *indice)
 {
@@ -12,7 +14,8 @@ int mostrarMenu(tArbolBinBusq *indice)
         printf("\n--- MENU PRINCIPAL ---\n");
         printf("1. Jugar una nueva partida\n");
         printf("2. Ver el ranking de jugadores\n");
-        printf("3. Salir del juego\n");
+        printf("3. Ver historial de un jugador\n");
+        printf("4. Salir del juego\n");
         printf("Seleccione una opcion: ");
 
         // validacion para evitar loops si ingresan letras
@@ -31,13 +34,21 @@ int mostrarMenu(tArbolBinBusq *indice)
                 mostrarRankingAlfabetico(indice);
                 break;
             case 3:
+                {
+                    char nombreHistorial[21];
+                    printf("\n");
+                    ingresarYValidarNombre(nombreHistorial);
+                    mostrarHistorialJugador(nombreHistorial);
+                }
+                break;
+            case 4:
                 printf("Saliendo del juego\n");
                 break;
             default:
                 printf("opcion incorrecta, intente con otra.\n");
         }
-    } while (opcion != 3);
-    return 3;
+    } while (opcion != 4);
+    return 4;
 }
 
 void ingresarYValidarNombre(char* nombre)

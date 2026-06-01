@@ -5,6 +5,8 @@
 #include "headers/menu.h"
 #include "headers/indice.h"
 #include "time.h"
+#include "headers/historial.h"
+
 int main()
 {
     char nombreJugador[21];
@@ -43,6 +45,7 @@ int main()
         Jugador.vidas=configuracion.vidas_inicio;
         Jugador.posicion_actual=mapa;
         Jugador.puntos=0;
+        Jugador.movimientos=0;
         Jugador.protegido_por_oasis=false;
 
 
@@ -83,7 +86,7 @@ int main()
 
         actualizarJugador(&indice, nombreJugador, Jugador.puntos);
         //imprimirConfig(&configuracion);
-
+        guardarPartida(nombreJugador, Jugador.puntos, Jugador.movimientos, gano);
         if(gano)
         {
             printf("\n--- ESTADO DEL TABLERO ---\n");

@@ -60,7 +60,7 @@ typedef struct {
     char nombre[50];
     int vidas;
     int puntos;
-
+    int movimientos;
     // Estados alterados (Efectos de casillas)
     bool protegido_por_oasis;
     bool pierde_proximo_turno; // SI LE CAE UNA TORMENTA

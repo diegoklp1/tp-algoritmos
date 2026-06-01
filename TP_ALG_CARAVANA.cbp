@@ -37,6 +37,7 @@
 		<Unit filename="caravana.txt" />
 		<Unit filename="config.txt" />
 		<Unit filename="headers/files.h" />
+		<Unit filename="headers/historial.h" />
 		<Unit filename="headers/indice.h" />
 		<Unit filename="headers/juego.h" />
 		<Unit filename="headers/main.h" />
@@ -50,6 +51,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="juego/entidades.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="juego/historial.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="juego/indice.c">

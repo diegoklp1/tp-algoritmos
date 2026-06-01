@@ -70,7 +70,7 @@ void planificarTurnoJugador(JugadorPartida* jugador,tCola* colaTurnos,tNodoLCDE*
 
     pasos=generarNumeroEntre(1,6);
     printf("Sacaste un %d.\n",pasos);
-
+    jugador->movimientos++;
     //Pedir direccion
     do{
         printf("Hacia donde vas? (1: Adelante, 2: Atras): ");
