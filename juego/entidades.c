@@ -212,23 +212,9 @@ void verificarChoques(JugadorPartida* jugador, Bandido* bandidos, int cantBandid
                 else
                 {
                     // Logica normal de dado (fuera del oasis)
-                    printf("\nCRITICO: El bandido %d te atrapo en la casilla %d.\n",
-                           (bandidos + i)->id,
-                           CasillaActual->pos);
-
+                    printf("\nCRITICO: El bandido %d te atrapo en la casilla %d.\n",(bandidos + i)->id,CasillaActual->pos);
                     jugador->vidas--;
-
-                    int hayOtroBandido = 0;
-
-                    for (int j = 0; j < cantBandidos; j++) {
-                        if (j != i && (bandidos + j)->id != -1 && (bandidos + j)->posicion_actual == jugador->posicion_actual) {
-                            hayOtroBandido = 1;
-                            break;
-                        }
-                    }
-                    if (!hayOtroBandido)
-                        ((NodoRuta*)jugador->posicion_actual->info)->hay_jugador = false;
-
+                    ((NodoRuta*)jugador->posicion_actual->info)->hay_jugador = false;
                     (bandidos + i)->posicion_actual = NULL;
 
 
@@ -283,24 +269,13 @@ void verificarChoques(JugadorPartida* jugador, Bandido* bandidos, int cantBandid
 }
 void mostrarHistorialMovimientos(tCola* historial) {
     MovimientoHistorial mov;
-    int turno = 1;
-
     printf("\n------------------------------------------\n");
     printf("        HISTORIAL DE MOVIMIENTOS        \n");
     printf("-------------------------------------\n");
 
     // sacarDeCola devuelve 1 si saco algo, 0 si la cola se vacio
     while (sacarDeCola(historial, &mov, sizeof(MovimientoHistorial))) {
-
-
-        char* direccionTexto = (mov.tipo_movimiento == 'F') ? "adelante" : "atras";
-
-        printf("Turno %d: El jugador se movio %d casillas hacia %s y llego a la casilla %d.\n", turno, mov.casillasMovidas, direccionTexto, mov.casillaDestino);
-
-        turno++;
+        printf("%c%d\n",mov.tipo_movimiento,mov.casillasMovidas);
     }
-
-
-
     printf("-------------------------------------\n");
 }

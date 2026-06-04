@@ -101,6 +101,7 @@ int main()
         vaciarCola(&colaTurnos);
         vaciarListaCD(&mapa);
         mostrarHistorialMovimientos(&colaHistorialMovs);
+        vaciarCola(&colaHistorialMovs);
 
     }
     guardarIndiceJugadores(&indice);
