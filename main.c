@@ -42,11 +42,13 @@ int main()
         generarTablero(&configuracion,listaBandidos,&mapa);
 
         JugadorPartida Jugador;
+        strncpy(Jugador.nombre, nombreJugador, sizeof(Jugador.nombre) - 1);
         Jugador.vidas=configuracion.vidas_inicio;
         Jugador.posicion_actual=mapa;
         Jugador.puntos=0;
         Jugador.movimientos=0;
         Jugador.protegido_por_oasis=false;
+        Jugador.pierde_proximo_turno=false;
 
 
         int gano=0;

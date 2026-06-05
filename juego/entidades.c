@@ -172,15 +172,9 @@ void verificarChoques(JugadorPartida* jugador, Bandido* bandidos, int cantBandid
 
     // Leemos en que casilla esta parado el jugador AHORA
     NodoRuta* CasillaActual = ((NodoRuta*)jugador->posicion_actual->info);
-    bool caiEnOasis=false;//ESTA VARIABLE LA UTILIZO PARA SABER SI TENGO UNA PROTECCION VIEJA O ES NUEVA
+    //bool caiEnOasis=false; // lo saco ya que le saco la vieja y si cayo en un oasis se reasigna.
 
-    if(CasillaActual->terreno == OASIS)
-    {
-        printf("Caiste en el oasis! estaras protegido el siguiente turno!\n");
-        jugador->protegido_por_oasis=true;
-        caiEnOasis=true;//CADA VEZ QUE CAIGO EN EL OASIS, EN ESTA LLAMADA A LA FUNCION ACTIVAMOS LA PROTECCION AL JUGADOR
-        CasillaActual->terreno=VACIO;
-    }
+
 
     // verificar choques con bandidos
     for (int i = 0; i < cantBandidos; i++)
@@ -189,7 +183,7 @@ void verificarChoques(JugadorPartida* jugador, Bandido* bandidos, int cantBandid
         if ((bandidos + i)->posicion_actual != NULL)   // Si el bandido esta vivo
         {
 
-            if (jugador->posicion_actual == (bandidos + i)->posicion_actual)
+            if (jugador->posicion_actual == (bandidos + i)->posicion_actual && CasillaActual->terreno != SALIDA)
             {
 
                 // Hubo choque, pero verificamos si esta en oasis
@@ -239,7 +233,28 @@ void verificarChoques(JugadorPartida* jugador, Bandido* bandidos, int cantBandid
         }
     }
 
+    //aca decidimos dejar que la tormenta permamenzca en la casilla por mas que haya caido el jugador
+    if (CasillaActual->terreno == TORMENTA)
+    {
+        if (jugador->protegido_por_oasis == true)
+            printf("\nCaiste en una tormenta, pero el oasis te protegio!\n"); 
+        else
+        {
+            printf("\nCaiste en una tormenta. Pierdes tu proximo turno.\n");
+            jugador->pierde_proximo_turno = true;
+            CasillaActual->terreno = VACIO;
+        }
+    }
 
+    if(jugador->protegido_por_oasis==true)
+        jugador->protegido_por_oasis=false; //si el jugador tiene un escudo activo, y no cayo en el oasis, significa q la proteccion viene de un turno anterior, hay q desactivarla
+
+    if(CasillaActual->terreno == OASIS)
+    {
+        printf("Caiste en el oasis! estaras protegido el siguiente turno!\n");
+        jugador->protegido_por_oasis=true;
+        CasillaActual->terreno=VACIO;
+    }
     // Evaluamos los terrenos beneficiosos / perjudiciales
 
     if (CasillaActual->terreno == VIDA_EXTRA)
@@ -254,21 +269,7 @@ void verificarChoques(JugadorPartida* jugador, Bandido* bandidos, int cantBandid
         printf("\nRecogiste un premio.\n");
         jugador->puntos += 1;
         ((NodoRuta*)jugador->posicion_actual->info)->terreno = VACIO;
-
     }
-    else if (CasillaActual->terreno==TORMENTA)
-    {
-        if(jugador->protegido_por_oasis==true)
-            printf("Atravesaste una tormenta, pero fuiste protegido por el oasis!\n");
-        else
-        {
-            printf("\nCaiste en una tormenta. Pierdes tu proximo turno.\n");
-            jugador->pierde_proximo_turno = true;
-            ((NodoRuta*)jugador->posicion_actual->info)->terreno = VACIO;
-        }
-    }
-    if(jugador->protegido_por_oasis==true&&caiEnOasis==false)
-        jugador->protegido_por_oasis=false; //si el jugador tiene un escudo activo, y no cayo en el oasis, significa q la proteccion viene de un turno anterior, hay q desactivarla
 }
 void mostrarHistorialMovimientos(tCola* historial) {
     MovimientoHistorial mov;

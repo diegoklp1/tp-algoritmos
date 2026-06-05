@@ -15,7 +15,8 @@ int mostrarMenu(tArbolBinBusq *indice)
         printf("1. Jugar una nueva partida\n");
         printf("2. Ver el ranking de jugadores\n");
         printf("3. Ver historial de un jugador\n");
-        printf("4. Salir del juego\n");
+        printf("4. Eliminar Jugador\n");
+        printf("5. Salir del juego\n");
         printf("Seleccione una opcion: ");
 
         // validacion para evitar loops si ingresan letras
@@ -40,14 +41,26 @@ int mostrarMenu(tArbolBinBusq *indice)
                     ingresarYValidarNombre(nombreHistorial);
                     mostrarHistorialJugador(nombreHistorial);
                 }
-                break;
             case 4:
+                {
+                    char nombreBaja[MAX_NOMBRE_JUGADOR];
+                    printf("\n");
+                    ingresarYValidarNombre(nombreBaja);
+                    strMayus(nombreBaja, nombreBaja);
+
+                    if (bajaJugador(indice, nombreBaja))
+                        printf("Jugador '%s' dado de baja correctamente.\n", nombreBaja);
+                    else
+                        printf("El jugador '%s' no existe o hubo un error.\n", nombreBaja);
+                }
+                break;
+            case 5:
                 printf("Saliendo del juego\n");
                 break;
             default:
                 printf("opcion incorrecta, intente con otra.\n");
         }
-    } while (opcion != 4);
+    } while (opcion != 5);
     return 4;
 }
 

@@ -186,7 +186,7 @@ int generarTablero(Config* c,Bandido* arrayBandidos,tListaCD *lista)
         return ERROR;
    }
    
-    NodoRuta t = {1, VACIO, true,0};
+    NodoRuta t = {1, INICIO, true,0};
     ponerAlComienzoCD(lista, &t, sizeof(NodoRuta));
     for(int i=2; i<c->cantidad_posiciones; i++)
     {
@@ -209,8 +209,8 @@ int generarTablero(Config* c,Bandido* arrayBandidos,tListaCD *lista)
     return 1;
 }
 
-// VISUALIZACIÓN Y GENERACIÓN DEL TABLERO
 
+/* TABLERO DE PRUEBAS
 void visualizarYGenerarTablero() {
     const char* tableroPrueba[] = { //harcodeado 25
         "[I J]",
@@ -255,9 +255,8 @@ void visualizarYGenerarTablero() {
         exit(1);
     }
 
-        for (int i = 0; i < cantidad_posiciones; i++) {
-            fprintf(archTablero, "%02d:%s\n", i + 1, tableroPrueba[i]);
-        }
-        fclose(archTablero);
+    for (int i = 0; i < cantidad_posiciones; i++) 
+        fprintf(archTablero, "%02d:%s\n", i + 1, tableroPrueba[i]);
+    fclose(archTablero);
 }
-
+*/

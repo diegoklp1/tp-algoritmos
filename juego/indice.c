@@ -199,16 +199,24 @@ void mostrarRankingPorPuntos()
     qsort(vec, cant, sizeof(tJugador), cmpPuntosDesc);
 
 
-printf("\n");
-printf("==========================================================\n");
-printf("                    RANKING DE JUGADORES\n");
-printf("==========================================================\n");
-printf("| %-4s | %-25s | %-8s | %-8s |\n",
-       "POS", "JUGADOR", "PUNTOS", "PARTIDAS");
-printf("----------------------------------------------------------\n");
-for (long i = 0; i < cant; i++)
-    printf("| %-4ld | %-25s | %8d | %8d |\n",i + 1,vec[i].nombre,vec[i].totalPuntos,vec[i].totalPartidas);
-printf("==========================================================\n\n");
+    printf("\n");
+    printf("==========================================================\n");
+    printf("                    RANKING DE JUGADORES\n");
+    printf("==========================================================\n");
+    printf("| %-4s | %-25s | %-8s | %-8s |\n",
+        "POS", "JUGADOR", "PUNTOS", "PARTIDAS");
+    printf("----------------------------------------------------------\n");
+    
+    int posicion = 1;
+    for (unsigned i = 0; i < cant; i++)
+    {
+        if (vec[i].nombre[0] != '\0') 
+        {
+            printf("| %-4d | %-25s | %8d | %8d |\n",posicion, vec[i].nombre, vec[i].totalPuntos, vec[i].totalPartidas);
+            posicion++;
+        }
+    }
+    printf("==========================================================\n\n");
     fclose(fp);
     free(vec);
 }
