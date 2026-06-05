@@ -32,25 +32,37 @@ void mostrarHistorialJugador(const char* nombre) {
     tPartida partidaActual;
     int encontradas = 0;
 
-    printf("\n======= HISTORIAL DE PARTIDAS: %s          =======\n", nombre);
-    printf("%-18s | %-8s | %-12s | %-10s\n", "Fecha", "Puntos", "Movimientos", "Resultado");
-    printf("-----------------------------------------------------------\n");
+    while (fread(&partidaActual, sizeof(tPartida), 1, pf) == 1)
+    {
+        if (_strnicmp(partidaActual.nombreJugador, nombre, MAX_NOMBRE) == 0)
+        {
+            if(encontradas == 0)
+            {
+                printf("\n");
+                printf("==========================================================\n");
+                printf("                 HISTORIAL DE PARTIDAS - %s\n", nombre);
+                printf("==========================================================\n");
+                printf("| %-16s | %-8s | %-11s | %-10s |\n",
+                    "FECHA","PUNTOS","MOVIMIENTOS","RESULTADO");
+                printf("----------------------------------------------------------\n");
+            }
 
-    // Recorrer el archivo leyendo partida por partida
-    while (fread(&partidaActual, sizeof(tPartida), 1, pf) == 1) {
-        // _strnicmp compara ignorando mayúsculas y minúsculas
-        if (_strnicmp(partidaActual.nombreJugador, nombre, MAX_NOMBRE) == 0) {
             encontradas++;
-            printf("%-18s | %-8d | %-12d | %-10s\n",
-                   partidaActual.fecha,
-                   partidaActual.puntos,
-                   partidaActual.movimientos,
-                   partidaActual.resultado == 1 ? "Victoria" : "Derrota");
+
+            printf("| %-16s | %8d | %11d | %-10s |\n",
+                partidaActual.fecha,
+                partidaActual.puntos,
+                partidaActual.movimientos,
+                partidaActual.resultado ? "Victoria" : "Derrota");
         }
     }
 
-    if (encontradas == 0) {
-        printf("  No se encontraron partidas para este jugador.\n");
+    if (encontradas == 0)
+            printf("| %s |\n","No se encontraron partidas para este jugador.");
+    else
+    {
+        printf("==========================================================\n");
+        printf("Total de partidas encontradas: %d\n\n", encontradas);
     }
     fclose(pf);
 }

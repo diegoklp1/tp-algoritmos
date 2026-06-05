@@ -166,26 +166,49 @@ void liberarIndiceJugadores(tArbolBinBusq *indice)
         eliminarRaizArbolBinBusq(indice);
 }
 
-static void _imprimirRegistro(void *info, unsigned tamInfo, unsigned nivel, void *params)
+static int cmpPuntosDesc(const void *a1, const void *b1)
 {
-    (void)tamInfo; (void)nivel; (void)params;
-    tRegistroIndice *reg = (tRegistroIndice *)info;
-    tJugador         jug;
-    FILE            *pf;
-
-    pf = fopen(ARCHIVO_JUGADORES, "rb");
-    if (!pf) { printf("  %-30s  [sin datos]\n", reg->nombre); return; }
-
-    fseek(pf, reg->posJugadores * (long)sizeof(tJugador), SEEK_SET);
-    if (fread(&jug, sizeof(tJugador), 1, pf) == 1)
-        printf("  %-30s  Puntos: %4d  Partidas: %3d\n",
-               jug.nombre, jug.totalPuntos, jug.totalPartidas);
-    fclose(pf);
+    const tJugador *a = (const tJugador *)a1;
+    const tJugador *b = (const tJugador *)b1;
+    return b->totalPuntos - a->totalPuntos;
 }
 
-void mostrarRankingAlfabetico(const tArbolBinBusq *indice)
+void mostrarRankingPorPuntos(void)
 {
-    printf("\n=== RANKING (orden alfabetico) ===\n");
-    recorrerEnOrdenArbolBinBusq(indice, NULL, _imprimirRegistro);
-    printf("==================================\n\n");
+    FILE *fp = fopen(ARCHIVO_JUGADORES, "rb");
+    if (!fp) {
+        printf("No hay jugadores registrados.\n");
+        return;
+    }
+    fseek(fp, 0L, SEEK_END);
+    int cant = ftell(fp) /sizeof(tJugador);
+    rewind(fp);
+
+    if (cant == 0) {
+        fclose(fp);
+        printf("No hay jugadores registrados.\n");
+        return;
+    }
+    tJugador* vec = malloc(cant * sizeof(tJugador));
+    if (!vec)
+    { 
+        fclose(fp);
+        return; 
+    } 
+    fread(vec, sizeof(tJugador), cant, fp);
+    qsort(vec, cant, sizeof(tJugador), cmpPuntosDesc);
+
+
+printf("\n");
+printf("==========================================================\n");
+printf("                    RANKING DE JUGADORES\n");
+printf("==========================================================\n");
+printf("| %-4s | %-25s | %-8s | %-8s |\n",
+       "POS", "JUGADOR", "PUNTOS", "PARTIDAS");
+printf("----------------------------------------------------------\n");
+for (long i = 0; i < cant; i++)
+    printf("| %-4ld | %-25s | %8d | %8d |\n",i + 1,vec[i].nombre,vec[i].totalPuntos,vec[i].totalPartidas);
+printf("==========================================================\n\n");
+    fclose(fp);
+    free(vec);
 }

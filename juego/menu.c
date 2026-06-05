@@ -31,7 +31,7 @@ int mostrarMenu(tArbolBinBusq *indice)
                 return 1;
                 break;
             case 2:
-                mostrarRankingAlfabetico(indice);
+                mostrarRankingPorPuntos();
                 break;
             case 3:
                 {
