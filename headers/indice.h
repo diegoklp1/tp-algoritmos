@@ -28,7 +28,7 @@ int actualizarJugador(const tArbolBinBusq *indice, const char *nombre, int punto
 void liberarIndiceJugadores(tArbolBinBusq *indice);
 void mostrarRankingAlfabetico(const tArbolBinBusq *indice);
 int cmpNombreJugador(const void *a, const void *b);
-void mostrarRankingPorPuntos(void);
+void mostrarRankingPorPuntos();
 
 
 #endif // FILES_H_INCLUDED

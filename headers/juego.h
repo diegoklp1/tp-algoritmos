@@ -81,7 +81,6 @@ typedef struct {
 typedef struct {
     char tipo_movimiento; // 'F' (Forward) o 'B' (Backward)
     unsigned casillasMovidas;//el lanzamiento ddel dado
-    unsigned casillaDestino;//en donde termine
 } MovimientoHistorial;
 // vamos a guardar cada movimiento en una lista (por ahora), puede haber una forma de guardar estos datos de una manera más óptima.
 

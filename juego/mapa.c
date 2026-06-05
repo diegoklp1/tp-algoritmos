@@ -174,13 +174,18 @@ tNodoLCDE* obtenerNodoPorPosicion(tListaCD* lista, int posicionBuscada) {
 }
 int generarTablero(Config* c,Bandido* arrayBandidos,tListaCD *lista)
 {
-   FILE* tableroArch = fopen(NOMBRE_ARCHIVO, "w+t");
+   FILE* tableroArch = fopen(NOMBRE_ARCHIVO_TABLERO, "w+t");
    if(!tableroArch)
    {
        return ERROR;
    }
-    ///////////tListaCD lista;
-    ////////////7crearListaCD(&lista);
+
+   if (c->maximo_bandidos >= c->cantidad_posiciones - 2) 
+   {
+        printf("Error: demasiados bandidos para garantizar solucion posible.\n");
+        return ERROR;
+   }
+   
     NodoRuta t = {1, VACIO, true,0};
     ponerAlComienzoCD(lista, &t, sizeof(NodoRuta));
     for(int i=2; i<c->cantidad_posiciones; i++)
@@ -197,6 +202,7 @@ int generarTablero(Config* c,Bandido* arrayBandidos,tListaCD *lista)
     agregarTerreno(lista, TORMENTA, c->maximo_tormentas, c->cantidad_posiciones);
     agregarTerreno(lista, OASIS, c->maximo_oasis, c->cantidad_posiciones);
     //movimientoJugador(lista, 5);
+    mostrarListaArchCD(lista, tableroArch, mostrarPos);
     mostrarListaArchCD(lista, stdout, mostrarPos);
     //vaciarListaCD(&lista);
     fclose(tableroArch);

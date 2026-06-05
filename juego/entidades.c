@@ -81,24 +81,15 @@ void planificarTurnoJugador(JugadorPartida* jugador,tCola* colaTurnos,tNodoLCDE*
     *destinoFuturoJ=destinoJugador(jugador->posicion_actual,pasos,direccion);
 
     // encolar el movimiento
-
     movJugador.tipo_entidad=JUGADOR;
     movJugador.entidad=jugador;
     movJugador.nodoDestino=*destinoFuturoJ;
 
-
     colaLogs.casillasMovidas=pasos;
     if (direccion == ADELANTE)
-    {
         colaLogs.tipo_movimiento = 'F';
-    }
     else
-    {
         colaLogs.tipo_movimiento = 'B';
-    }
-
-    colaLogs.casillaDestino = ((NodoRuta*)(*destinoFuturoJ)->info)->pos;
-
 
     ponerEnCola(colaTurnos,&movJugador,sizeof(MovimientoCola));
     ponerEnCola(colaHistorial,&colaLogs,sizeof(MovimientoHistorial));
@@ -179,10 +170,9 @@ void actualizarPosiciones(tCola* colaTurnos) {
 void verificarChoques(JugadorPartida* jugador, Bandido* bandidos, int cantBandidos, tListaCD* mapa)
 {
 
-    // 1. Leemos en que casilla esta parado el jugador AHORA
+    // Leemos en que casilla esta parado el jugador AHORA
     NodoRuta* CasillaActual = ((NodoRuta*)jugador->posicion_actual->info);
     bool caiEnOasis=false;//ESTA VARIABLE LA UTILIZO PARA SABER SI TENGO UNA PROTECCION VIEJA O ES NUEVA
-    // 2. Evaluamos si esta protegido
 
     if(CasillaActual->terreno == OASIS)
     {
@@ -192,7 +182,7 @@ void verificarChoques(JugadorPartida* jugador, Bandido* bandidos, int cantBandid
         CasillaActual->terreno=VACIO;
     }
 
-    // 3. Miramos choques con los enemigos
+    // verificar choques con bandidos
     for (int i = 0; i < cantBandidos; i++)
     {
 
@@ -227,6 +217,21 @@ void verificarChoques(JugadorPartida* jugador, Bandido* bandidos, int cantBandid
                         jugador->posicion_actual = obtenerNodoPorPosicion(mapa, 1);
                         ((NodoRuta*)jugador->posicion_actual->info)->hay_jugador = true;
                         printf("Has sido devuelto al campamento inicial (Casilla 1).\n");
+
+
+                        // muevo los bandidos que esten en la salida una casilla
+                        for (int j = 0; j < cantBandidos; j++) {
+                            if ((bandidos + j)->id != -1 && (bandidos + j)->posicion_actual != NULL) {
+                                NodoRuta* casillaB = (NodoRuta*)(bandidos + j)->posicion_actual->info;
+                                if (casillaB->terreno == SALIDA) 
+                                {
+                                    casillaB->cant_bandidos--;
+                                    (bandidos + j)->posicion_actual = (bandidos + j)->posicion_actual->ant;
+                                    ((NodoRuta*)(bandidos + j)->posicion_actual->info)->cant_bandidos++;
+                                    printf("El bandido %d retrocede de la salida.\n", (bandidos + j)->id);
+                                }
+                            }
+                        }
                     }
                     return;
                 }
@@ -235,7 +240,7 @@ void verificarChoques(JugadorPartida* jugador, Bandido* bandidos, int cantBandid
     }
 
 
-    // 4. Evaluamos los terrenos beneficiosos / perjudiciales
+    // Evaluamos los terrenos beneficiosos / perjudiciales
 
     if (CasillaActual->terreno == VIDA_EXTRA)
     {
@@ -247,7 +252,7 @@ void verificarChoques(JugadorPartida* jugador, Bandido* bandidos, int cantBandid
     else if (CasillaActual->terreno == PREMIO)
     {
         printf("\nRecogiste un premio.\n");
-        jugador->puntos += 100;
+        jugador->puntos += 1;
         ((NodoRuta*)jugador->posicion_actual->info)->terreno = VACIO;
 
     }
@@ -261,8 +266,6 @@ void verificarChoques(JugadorPartida* jugador, Bandido* bandidos, int cantBandid
             jugador->pierde_proximo_turno = true;
             ((NodoRuta*)jugador->posicion_actual->info)->terreno = VACIO;
         }
-
-
     }
     if(jugador->protegido_por_oasis==true&&caiEnOasis==false)
         jugador->protegido_por_oasis=false; //si el jugador tiene un escudo activo, y no cayo en el oasis, significa q la proteccion viene de un turno anterior, hay q desactivarla

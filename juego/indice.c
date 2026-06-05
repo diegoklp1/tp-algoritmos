@@ -173,7 +173,7 @@ static int cmpPuntosDesc(const void *a1, const void *b1)
     return b->totalPuntos - a->totalPuntos;
 }
 
-void mostrarRankingPorPuntos(void)
+void mostrarRankingPorPuntos()
 {
     FILE *fp = fopen(ARCHIVO_JUGADORES, "rb");
     if (!fp) {
