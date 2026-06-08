@@ -40,6 +40,7 @@ int mostrarMenu(tArbolBinBusq *indice)
                     printf("\n");
                     ingresarYValidarNombre(nombreHistorial);
                     mostrarHistorialJugador(nombreHistorial);
+                    break;
                 }
             case 4:
                 {

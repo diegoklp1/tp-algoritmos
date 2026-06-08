@@ -34,7 +34,7 @@ void mostrarHistorialJugador(const char* nombre) {
 
     while (fread(&partidaActual, sizeof(tPartida), 1, pf) == 1)
     {
-        if (strcmpi(partidaActual.nombreJugador, nombre) == 0)
+        if (strcmp(partidaActual.nombreJugador, nombre) == 0)
         {
             if(encontradas == 0)
             {

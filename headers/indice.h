@@ -29,6 +29,6 @@ void liberarIndiceJugadores(tArbolBinBusq *indice);
 void mostrarRankingAlfabetico(const tArbolBinBusq *indice);
 int cmpNombreJugador(const void *a, const void *b);
 void mostrarRankingPorPuntos();
-
+void loginJugador(tArbolBinBusq *,char *);
 
 #endif // FILES_H_INCLUDED

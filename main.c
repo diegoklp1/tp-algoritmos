@@ -20,16 +20,7 @@ int main()
 
     while(mostrarMenu(&indice)==1)
     {
-        ingresarYValidarNombre(nombreJugador);
-
-        tJugador jug;
-        if (buscarJugador(&indice, nombreJugador, &jug)) {
-            printf("Bienvenido nuevamente, %s\n", nombreJugador);
-        } else {
-            printf("Jugador nuevo detectado. Procediendo al alta...\n");
-            altaJugador(&indice, nombreJugador);
-            printf("Jugador '%s' registrado con exito.\n", nombreJugador);
-        }
+        loginJugador(&indice,nombreJugador);
 
         tListaCD mapa;
         crearListaCD(&mapa);
@@ -75,7 +66,7 @@ int main()
             actualizarPosiciones(&colaTurnos);
             verificarChoques(&Jugador,listaBandidos,configuracion.maximo_bandidos,&mapa);
 
-            if(((NodoRuta*)Jugador.posicion_actual->info)->terreno==SALIDA)
+            if(((NodoRuta*)Jugador.posicion_actual->info)->terreno==SALIDA&&Jugador.vidas>0)
                 gano=1;
 
             if (Jugador.vidas > 0&&!gano)
