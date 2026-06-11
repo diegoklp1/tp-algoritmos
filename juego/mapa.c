@@ -155,19 +155,19 @@ tNodoLCDE* obtenerNodoPorPosicion(tListaCD* lista, int posicionBuscada) {
         }
 
     tNodoLCDE* aux = *lista;
-    if (((NodoRuta*)aux->info)->pos == posicionBuscada)
+    if (((NodoRuta*)obtenerInfoNodo(aux))->pos == posicionBuscada)
         {
         return aux;
         }
-        aux=aux->sig; //si no es la primera posicion, buscamos el resto
+        aux = siguienteNodo(aux); //si no es la primera posicion, buscamos el resto
     while (aux != *lista)
     {
-        NodoRuta* info = (NodoRuta*)aux->info;
+        NodoRuta* info = (NodoRuta*)obtenerInfoNodo(aux);
         if (info->pos == posicionBuscada)
         {
             return aux; //Encontramos el nodo
         }
-        aux = aux->sig;
+        aux = siguienteNodo(aux);
     }
 
     return NULL;

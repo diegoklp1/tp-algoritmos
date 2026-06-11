@@ -217,3 +217,27 @@ int modificarValor(
 
     return 0;
 }
+
+void* obtenerInfoNodo(const tNodoLCDE* nodo)
+{
+    if (nodo == NULL) return NULL;
+    return nodo->info;
+}
+
+tNodoLCDE* siguienteNodo(const tNodoLCDE* nodo)
+{
+    if (nodo == NULL) return NULL;
+    return nodo->sig;
+}
+
+tNodoLCDE* anteriorNodo(const tNodoLCDE* nodo)
+{
+    if (nodo == NULL) return NULL;
+    return nodo->ant;
+}
+
+tNodoLCDE* obtenerPrimeroLista(const tListaCD* p)
+{
+    if (p == NULL || *p == NULL) return NULL;
+    return *p;
+}

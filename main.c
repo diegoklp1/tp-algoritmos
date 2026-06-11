@@ -35,7 +35,7 @@ int main()
         JugadorPartida Jugador;
         strncpy(Jugador.nombre, nombreJugador, sizeof(Jugador.nombre) - 1);
         Jugador.vidas=configuracion.vidas_inicio;
-        Jugador.posicion_actual=mapa;
+        Jugador.posicion_actual=obtenerPrimeroLista(&mapa);
         Jugador.puntos=0;
         Jugador.movimientos=0;
         Jugador.protegido_por_oasis=false;
@@ -66,7 +66,7 @@ int main()
             actualizarPosiciones(&colaTurnos);
             verificarChoques(&Jugador,listaBandidos,configuracion.maximo_bandidos,&mapa);
 
-            if(((NodoRuta*)Jugador.posicion_actual->info)->terreno==SALIDA&&Jugador.vidas>0)
+            if(((NodoRuta*)obtenerInfoNodo(Jugador.posicion_actual))->terreno==SALIDA&&Jugador.vidas>0)
                 gano=1;
 
             if (Jugador.vidas > 0&&!gano)

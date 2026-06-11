@@ -24,5 +24,9 @@ void mostrarListaCD(const tListaCD *p, void(*mostrar)(const void*));
 int buscarElementoLista(tListaCD* p, void* d, unsigned cantBytes, int(*comparar)(const void*, const void*), void* elem);
 int modificarValor(tListaCD* p, void *d, unsigned cantBytes, int(*comparar)(const void*, const void*), int(*accion)(void**, unsigned*, const void*, unsigned), void* datosAModif);
 void mostrarListaArchCD(const tListaCD *p, FILE* donde, void(*mostrar)(const void*, FILE*));
+void*       obtenerInfoNodo(const tNodoLCDE* nodo);
+tNodoLCDE*  siguienteNodo(const tNodoLCDE* nodo);
+tNodoLCDE*  anteriorNodo(const tNodoLCDE* nodo);
+tNodoLCDE*  obtenerPrimeroLista(const tListaCD* p);
 
 #endif // LISTACDE_H_INCLUDED
