@@ -77,9 +77,6 @@ int main()
             }
         }
 
-        actualizarJugador(&indice, nombreJugador, Jugador.puntos);
-        //imprimirConfig(&configuracion);
-        guardarPartida(nombreJugador, Jugador.puntos, Jugador.movimientos, gano);
         if(gano)
         {
             printf("\n--- ESTADO DEL TABLERO ---\n");
@@ -91,7 +88,10 @@ int main()
         else
             printf("Mala suerte! los bandidos acabaron contigo. Partida terminada!\n");
 
-
+        
+        actualizarJugador(&indice, nombreJugador, Jugador.puntos);
+        guardarPartida(nombreJugador, Jugador.puntos, Jugador.movimientos, gano);
+        
         vaciarCola(&colaTurnos);
         vaciarListaCD(&mapa);
         mostrarHistorialMovimientos(&colaHistorialMovs);
