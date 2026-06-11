@@ -71,11 +71,19 @@ void planificarTurnoJugador(JugadorPartida* jugador,tCola* colaTurnos,tNodoLCDE*
     pasos=generarNumeroEntre(1,6);
     printf("Sacaste un %d.\n",pasos);
     jugador->movimientos++;
-    //Pedir direccion
-    do{
-        printf("Hacia donde vas? (1: Adelante, 2: Atras): ");
-        scanf("%d",&direccion);
-    }while(direccion!=ADELANTE&&direccion!=ATRAS);
+    int posActual = ((NodoRuta*)obtenerInfoNodo(jugador->posicion_actual))->pos; // posicion actual
+    int puedeRetroceder = (posActual - pasos) >= 1; // veo si puede ir para atrás
+    if (puedeRetroceder) {
+        do {
+            printf("Hacia donde vas? (1: Adelante, 2: Atras): ");
+            scanf("%d", &direccion);
+        } while (direccion != ADELANTE && direccion != ATRAS);
+    } else {
+        printf("No puedes retroceder, avanzas hacia adelante. (ENTER)\n");
+        fflush(stdin);
+        getchar();
+        direccion = ADELANTE;
+    }
 
     //Calcular destino
     *destinoFuturoJ=destinoJugador(jugador->posicion_actual,pasos,direccion);
@@ -213,19 +221,19 @@ void verificarChoques(JugadorPartida* jugador, Bandido* bandidos, int cantBandid
                         printf("Has sido devuelto al campamento inicial (Casilla 1).\n");
 
 
-                        // muevo los bandidos que esten en la salida una casilla
-                        for (int j = 0; j < cantBandidos; j++) {
-                            if ((bandidos + j)->id != -1 && (bandidos + j)->posicion_actual != NULL) {
-                                NodoRuta* casillaB = (NodoRuta*)obtenerInfoNodo((bandidos + j)->posicion_actual);
-                                if (casillaB->terreno == SALIDA) 
-                                {
-                                    casillaB->cant_bandidos--;
-                                    (bandidos + j)->posicion_actual = anteriorNodo((bandidos + j)->posicion_actual);
-                                    ((NodoRuta*)obtenerInfoNodo((bandidos + j)->posicion_actual))->cant_bandidos++;
-                                    printf("El bandido %d retrocede de la salida.\n", (bandidos + j)->id);
-                                }
+                    // muevo los bandidos que esten en el inicio del tablero
+                    for (int j = 0; j < cantBandidos; j++) {
+                        if ((bandidos + j)->id != -1 && (bandidos + j)->posicion_actual != NULL) {
+                            NodoRuta* casillaB = (NodoRuta*)obtenerInfoNodo((bandidos + j)->posicion_actual);
+                            if (casillaB->pos == 1)
+                            {
+                                casillaB->cant_bandidos--;
+                                (bandidos + j)->posicion_actual = anteriorNodo((bandidos + j)->posicion_actual);
+                                ((NodoRuta*)obtenerInfoNodo((bandidos + j)->posicion_actual))->cant_bandidos++;
+                                printf("El bandido %d retrocede del inicio para dar lugar al jugador.\n", (bandidos + j)->id);
                             }
                         }
+                    }
                     }
                     return;
                 }

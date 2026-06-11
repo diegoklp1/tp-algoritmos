@@ -85,6 +85,7 @@ int main()
             printf("\n--- ESTADO DEL TABLERO ---\n");
             mostrarListaArchCD(&mapa, stdout, mostrarPos);
             printf("Llegaste  a Ciudad Refugio, juego terminado. felicidades!");
+            Jugador.puntos+=5; // puntos por ganar.
             printf("\n Cantidad de puntos obtenidos %d\n",Jugador.puntos);
         }
         else
