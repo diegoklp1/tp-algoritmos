@@ -1,7 +1,6 @@
 #ifndef JUEGO_H_INCLUDED
 #define JUEGO_H_INCLUDED
 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -26,11 +25,8 @@
 #define DADO_MAX 6
 
 
-
-
-
 // =================================================================
-// CONFIGURACIÓN DEL JUEGO (Innegociable)
+// CONFIGURACIÓN DEL JUEGO
 // =================================================================
 typedef struct {
     int cantidad_posiciones;
@@ -61,12 +57,11 @@ typedef struct {
     int vidas;
     int puntos;
     int movimientos;
-    // Estados alterados (Efectos de casillas)
     bool protegido_por_oasis;
     bool pierde_proximo_turno; // SI LE CAE UNA TORMENTA
 
     //El jugador sabe dónde está mediante un puntero al mapa
-    tNodoLCDE* posicion_actual;  //Cambio de NodoRuta a un tNodo * ya que sino no es posible avanzar por el tablero
+    tNodoLCDE* posicion_actual;
 } JugadorPartida;
 
 typedef struct {
@@ -82,7 +77,6 @@ typedef struct {
     char tipo_movimiento; // 'F' (Forward) o 'B' (Backward)
     unsigned casillasMovidas;//el lanzamiento ddel dado
 } MovimientoHistorial;
-// vamos a guardar cada movimiento en una lista (por ahora), puede haber una forma de guardar estos datos de una manera más óptima.
 
 // =================================================================
 // PERSISTENCIA Y RANKING (Para el Árbol Binario)
@@ -102,7 +96,6 @@ typedef struct {
 } MovimientoCola;
 int leerConfig(Config* configuracion);
 void imprimirConfig(const Config* c);
-void iniciarTablero(const char* nombre);
 
 tNodoLCDE* destinoJugador(tNodoLCDE* posActual, int pasos, int direccion);
 tNodoLCDE* destinoBandido(tNodoLCDE* posActual,tNodoLCDE* destJugador ,int pasosBandido,int casillas);

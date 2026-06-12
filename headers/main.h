@@ -2,19 +2,9 @@
 #define MAIN_H_INCLUDED
 
 #include <stdio.h>
-
-
-// PENSAR BIEN LA FORMA CORRECTA DE SEPARAR LOS DEFINE Y QUE NO ESTÉ TODO EN MAIN.H
-// FIJATE QUE ACÁ TENEMOS LOS DEFINE QUE SE VAN A USAR EN MAIN Y TAMBIEN SE VAN A USAR EN CUALQUIER FUNCION (pensar si se puede hacer mejor)
-
 #define NOMBRE_ARCHIVO_TABLERO "caravana.txt"
 #define NOMBRE_CONFIG "config.txt"
-
-//#define MAX_LINEA 0
-//#define TAM_INI 0
 #define ERROR 0
 #define OK 1
-
-
 
 #endif // MAIN_H_INCLUDED

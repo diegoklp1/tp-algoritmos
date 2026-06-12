@@ -47,7 +47,6 @@ int mostrarMenu(tArbolBinBusq *indice)
                     char nombreBaja[MAX_NOMBRE_JUGADOR];
                     printf("\n");
                     ingresarYValidarNombre(nombreBaja);
-                    strMayus(nombreBaja, nombreBaja);
 
                     if (bajaJugador(indice, nombreBaja))
                         printf("Jugador '%s' dado de baja correctamente.\n", nombreBaja);

@@ -6,18 +6,6 @@
 #include <ctype.h>
 
 
-void strMayus(char *dest, const char *orig)
-{
-    while(*orig)
-    {
-        *dest = toupper((unsigned char)*orig);
-        dest++;
-        orig++;
-    }
-
-    *dest = '\0';
-}
-
 int cmpNombreJugador(const void *a, const void *b)
 {
     tRegistroIndice *a1 = (tRegistroIndice *)a;

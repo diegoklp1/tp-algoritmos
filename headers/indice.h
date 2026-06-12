@@ -18,7 +18,6 @@ typedef struct {
     int  totalPartidas;
 } tJugador;
 
-void strMayus(char *dest, const char *orig);
 void iniciarIndiceJugadores(tArbolBinBusq *indice);
 int guardarIndiceJugadores(const tArbolBinBusq *indice);
 int buscarJugador(const tArbolBinBusq *indice, const char *nombre, tJugador *jug);
@@ -26,7 +25,6 @@ int altaJugador(tArbolBinBusq *indice, char *nombre);
 int bajaJugador(tArbolBinBusq *indice, const char *nombre);
 int actualizarJugador(const tArbolBinBusq *indice, const char *nombre, int puntosNuevos);
 void liberarIndiceJugadores(tArbolBinBusq *indice);
-void mostrarRankingAlfabetico(const tArbolBinBusq *indice);
 int cmpNombreJugador(const void *a, const void *b);
 void mostrarRankingPorPuntos();
 void loginJugador(tArbolBinBusq *,char *);
