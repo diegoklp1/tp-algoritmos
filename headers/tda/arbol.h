@@ -27,7 +27,7 @@ int buscarElemArbolBinBusq(const tArbolBinBusq *p, void *d, unsigned tam, Cmp cm
 int eliminarRaizArbolBinBusq(tArbolBinBusq *p);
 int eliminarElemArbolBinBusq(tArbolBinBusq *p, void *d, unsigned tam, Cmp cmp);
 void recorrerEnOrdenArbolBinBusq(const tArbolBinBusq *p, void *params, Accion accion);
-int guardarIndiceArbolBinBusq(const tArbolBinBusq *p, const char *nomArch);
-int cargarIndiceArbolBinBusq(tArbolBinBusq *p, const char *nomArch);
+int crearDesdeArchBinArbol(FILE *arch, const tArbolBinBusq *arbol);
+int cargarDesdeArchBinOrdArbol(FILE *arch, tArbolBinBusq *p, unsigned tamInfo);
 
 #endif // ARBOL_H_INCLUDED

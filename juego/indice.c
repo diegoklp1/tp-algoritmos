@@ -25,21 +25,48 @@ int cmpNombreJugador(const void *a, const void *b)
     return strncmp(a1->nombre, b1->nombre, MAX_NOMBRE_JUGADOR);
 }
 
+static void _construirIndiceDesdeJugadores(tArbolBinBusq *indice)
+{
+    FILE *pf = fopen(ARCHIVO_JUGADORES, "rb");
+    if (!pf) return;
+
+    tJugador jug;
+    tRegistroIndice reg;
+    long pos = 0;
+
+    while (fread(&jug, sizeof(tJugador), 1, pf) == 1) {
+        if (jug.nombre[0] != '\0') {
+            strncpy(reg.nombre, jug.nombre, MAX_NOMBRE_JUGADOR - 1);
+            reg.nombre[MAX_NOMBRE_JUGADOR - 1] = '\0';
+            reg.posJugadores = pos;
+            insertarArbolBinBusq(indice, &reg, sizeof(tRegistroIndice), cmpNombreJugador);
+        }
+        pos++;
+    }
+    fclose(pf);
+}
+
 void iniciarIndiceJugadores(tArbolBinBusq *indice)
 {
     crearArbolBinBusq(indice);
 
     FILE *pf = fopen(ARCHIVO_INDICE, "rb");
-    if (!pf)
+    if (!pf) {
+        _construirIndiceDesdeJugadores(indice);
         return;
-    fclose(pf);
+    }
 
-    cargarIndiceArbolBinBusq(indice, ARCHIVO_INDICE);
+    cargarDesdeArchBinOrdArbol(pf, indice, sizeof(tRegistroIndice));
+    fclose(pf);
 }
 
 int guardarIndiceJugadores(const tArbolBinBusq *indice)
 {
-    return guardarIndiceArbolBinBusq(indice, ARCHIVO_INDICE);
+    FILE *pf = fopen(ARCHIVO_INDICE, "wb");
+    if (!pf) return ERROR_ARCH;
+    int r = crearDesdeArchBinArbol(pf, indice);
+    fclose(pf);
+    return r;
 }
 
 int buscarJugador(const tArbolBinBusq *indice, const char *nombre, tJugador *jug)

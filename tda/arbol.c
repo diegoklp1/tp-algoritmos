@@ -1,15 +1,12 @@
 #include "../headers/tda/arbol.h"
 
-#define BANDERA_NULO  0
-#define BANDERA_NODO  1
-
 static tNodoArbol **buscarNodoArbolBinBusq(const tArbolBinBusq *p, const void *d, Cmp cmp);
 static tNodoArbol **mayorNodoArbolBinBusq (const tArbolBinBusq *p);
 static tNodoArbol **menorNodoArbolBinBusq (const tArbolBinBusq *p);
 static unsigned alturaArbolBin (const tArbolBinBusq *p);
 static void _recorrerInOrden (const tArbolBinBusq *p, unsigned n, void *params, Accion accion);
-static void _guardarPreOrdenRec (const tArbolBinBusq *p, FILE *pf);
-static int _cargarPreOrdenRec (tArbolBinBusq *p, FILE *pf);
+static void _escribirInOrden(void *info, unsigned tamInfo, unsigned nivel, void *param);
+static int _cargarDesdeArchBinOrdArbol(FILE *arch, tArbolBinBusq *p, unsigned tamInfo, int li, int ls);
 
 void crearArbolBinBusq(tArbolBinBusq *p)
 {
@@ -88,29 +85,21 @@ void recorrerEnOrdenArbolBinBusq(const tArbolBinBusq *p, void *params, Accion ac
     _recorrerInOrden(p, 0, params, accion);
 }
 
-int guardarIndiceArbolBinBusq(const tArbolBinBusq *p, const char *nomArch)
+int crearDesdeArchBinArbol(FILE *arch, const tArbolBinBusq *arbol)
 {
-    FILE *pf;
-    if (!(pf = fopen(nomArch, "wb")))
-        return ERROR_ARCH;
-    _guardarPreOrdenRec(p, pf);
-    fclose(pf);
+    if (!arch) return ERROR_ARCH;
+    rewind(arch);
+    _recorrerInOrden(arbol, 0, arch, _escribirInOrden);
     return TODO_BIEN;
 }
 
-int cargarIndiceArbolBinBusq(tArbolBinBusq *p, const char *nomArch)
+int cargarDesdeArchBinOrdArbol(FILE *arch, tArbolBinBusq *p, unsigned tamInfo)
 {
-    FILE *pf;
-    int r;
-
-    if (*p)
-        return SIN_INICIALIZAR;
-    if (!(pf = fopen(nomArch, "rb")))
-        return ERROR_ARCH;
-
-    r = _cargarPreOrdenRec(p, pf);
-    fclose(pf);
-    return r;
+    if (!arch || *p) return ERROR_ARCH;
+    fseek(arch, 0L, SEEK_END);
+    long cant = ftell(arch) / tamInfo;
+    if (cant == 0) return TODO_BIEN;
+    return _cargarDesdeArchBinOrdArbol(arch, p, tamInfo, 0, cant-1);
 }
 
 static tNodoArbol **buscarNodoArbolBinBusq(const tArbolBinBusq *p, const void *d, Cmp compara)
@@ -160,60 +149,35 @@ static void _recorrerInOrden(const tArbolBinBusq *p, unsigned n, void *params, A
     _recorrerInOrden(&(*p)->der, n + 1, params, accion);
 }
 
-static void _guardarPreOrdenRec(const tArbolBinBusq *p, FILE *pf)
+static void _escribirInOrden(void *info, unsigned tamInfo, unsigned nivel, void *param)
 {
-    unsigned char bandera;
-
-    if (!*p) {
-        bandera = BANDERA_NULO;
-        fwrite(&bandera, sizeof(unsigned char), 1, pf);
-        return;
-    }
-
-    bandera = BANDERA_NODO;
-    fwrite(&bandera,sizeof(unsigned char), 1,pf);
-    fwrite(&(*p)->tamInfo, sizeof(unsigned),1,pf);
-    fwrite((*p)->info,1,(*p)->tamInfo, pf);
-
-    _guardarPreOrdenRec(&(*p)->izq, pf);
-    _guardarPreOrdenRec(&(*p)->der, pf);
+    fwrite(info, tamInfo, 1, (FILE*)param);
 }
 
-static int _cargarPreOrdenRec(tArbolBinBusq *p, FILE *pf)
+static int _cargarDesdeArchBinOrdArbol(FILE *arch, tArbolBinBusq *p, unsigned tamInfo, int li, int ls)
 {
-    unsigned char bandera;
-    unsigned tamInfo;
-    tNodoArbol* nue;
+    if (li > ls) return TODO_BIEN;
 
-    if (fread(&bandera, sizeof(unsigned char), 1, pf) != 1)
-        return ERROR_ARCH;
+    int m = (li + ls) / 2;
+    void *buffer = malloc(tamInfo);
+    if (!buffer) return SIN_MEM;
 
-    if (bandera == BANDERA_NULO) {
-        *p = NULL;
-        return TODO_BIEN;
-    }
-
-    if (fread(&tamInfo, sizeof(unsigned), 1, pf) != 1)
-        return ERROR_ARCH;
-
-    nue = (tNodoArbol *)malloc(sizeof(tNodoArbol));
-    if (!nue) return SIN_MEM;
-    nue->info = malloc(tamInfo);
-    if (!nue->info) { free(nue); return SIN_MEM; }
-
-    if (fread(nue->info, 1, tamInfo, pf) != tamInfo) {
-        free(nue->info);
-        free(nue);
+    fseek(arch, (long)m * tamInfo, SEEK_SET);
+    if (fread(buffer, tamInfo, 1, arch) != 1) {
+        free(buffer);
         return ERROR_ARCH;
     }
 
+    tNodoArbol *nue = malloc(sizeof(tNodoArbol));
+    if (!nue) { free(buffer); return SIN_MEM; }
+    nue->info = buffer;
     nue->tamInfo = tamInfo;
     nue->izq = NULL;
     nue->der = NULL;
     *p = nue;
 
-    if (_cargarPreOrdenRec(&(*p)->izq, pf) != TODO_BIEN) return ERROR_ARCH;
-    if (_cargarPreOrdenRec(&(*p)->der, pf) != TODO_BIEN) return ERROR_ARCH;
-
-    return TODO_BIEN;
+    int ri =_cargarDesdeArchBinOrdArbol(arch, &(*p)->izq, tamInfo, li,m - 1);
+    int rd =_cargarDesdeArchBinOrdArbol(arch, &(*p)->der, tamInfo, m+1,ls);
+    return ri != TODO_BIEN ? ri : rd;
 }
+

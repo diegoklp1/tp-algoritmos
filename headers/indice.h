@@ -1,5 +1,5 @@
-#ifndef FILES_H_INCLUDED
-#define FILES_H_INCLUDED
+#ifndef INDICE_H_INCLUDED
+#define INDICE_H_INCLUDED
 
 #include "tda/arbol.h"
 
@@ -31,4 +31,4 @@ int cmpNombreJugador(const void *a, const void *b);
 void mostrarRankingPorPuntos();
 void loginJugador(tArbolBinBusq *,char *);
 
-#endif // FILES_H_INCLUDED
+#endif // INDICE_H_INCLUDED

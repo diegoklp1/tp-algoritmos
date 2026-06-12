@@ -25,8 +25,6 @@ tNodoLCDE* destinoJugador(tNodoLCDE* posActual, int pasos, int direccion)
                 aux=anteriorNodo(aux);
         }
         pasos--;
-
-
     }
     return aux;
 }
@@ -109,21 +107,18 @@ void planificarTurnoBandidos(Bandido* bandidos, int cantBandidos, tNodoLCDE* des
     // Recorremos a todos los bandidos uno por uno
     for (int i = 0; i < cantBandidos; i++) {
         if((bandidos+i)->id!=-1)
-        // 1. El bandido tira el dado
+        // El bandido tira el dado
         {
             int pasos = generarNumeroEntre(1,4);
-
-
-
             tNodoLCDE* destinoCalculado = destinoBandido((bandidos+i)->posicion_actual, destinoJugador, pasos, totalCasillas);
 
-            // 3. Creamos el "ticket" para la cola
+            // Creamos movimiento de bandido para la cola
             MovimientoCola movBandido;
             movBandido.tipo_entidad = BANDIDO;
             movBandido.entidad = (bandidos+i);          // Pasamos el bandido
             movBandido.nodoDestino = destinoCalculado;  // Pasamos el nodo que calculamos
 
-            // 4. Metemos el ticket en la cola
+            // Metemos el ticket en la cola
             ponerEnCola(colaTurnos, &movBandido, sizeof(MovimientoCola));
         }
     }
@@ -138,16 +133,16 @@ void actualizarPosiciones(tCola* colaTurnos) {
         {
             JugadorPartida* j = (JugadorPartida*)turnoActual.entidad;
 
-            // 1. Quitamos al jugador de la casilla vieja
+            // Quito al jugador de la casilla vieja
             if (j->posicion_actual != NULL)
             {
                ((NodoRuta*)obtenerInfoNodo(j->posicion_actual))->hay_jugador = false;
             }
 
-            // 2. Le damos su nueva posicion
+            // Le doy su nueva posicion
             j->posicion_actual = turnoActual.nodoDestino;
 
-            // 3. Activamos al jugador en la casilla nueva
+            // Activo al jugador en la casilla nueva
             if (j->posicion_actual != NULL)
             {
                 ((NodoRuta*)obtenerInfoNodo(j->posicion_actual))->hay_jugador = true;
@@ -157,16 +152,16 @@ void actualizarPosiciones(tCola* colaTurnos) {
         {
             Bandido* b = (Bandido*)turnoActual.entidad;
 
-            // 1. Restamos al bandido de la casilla vieja
+            // Resto al bandido de la casilla vieja
             if (b->posicion_actual != NULL && ((NodoRuta*)obtenerInfoNodo(b->posicion_actual))->cant_bandidos > 0)
             {
                 ((NodoRuta*)obtenerInfoNodo(b->posicion_actual))->cant_bandidos--;
             }
 
-            // 2. Le damos su nueva posicion
+            // Le doy nueva posicion
             b->posicion_actual = turnoActual.nodoDestino;
 
-            // 3. Sumamos al bandido en la casilla nueva
+            // Sumo al bandido en la casilla nueva
             if (b->posicion_actual != NULL)
             {
                 ((NodoRuta*)obtenerInfoNodo(b->posicion_actual))->cant_bandidos++;
