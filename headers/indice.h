@@ -25,7 +25,6 @@ int altaJugador(tArbolBinBusq *indice, char *nombre);
 int bajaJugador(tArbolBinBusq *indice, const char *nombre);
 int actualizarJugador(const tArbolBinBusq *indice, const char *nombre, int puntosNuevos);
 void liberarIndiceJugadores(tArbolBinBusq *indice);
-int cmpNombreJugador(const void *a, const void *b);
 void mostrarRankingPorPuntos();
 void loginJugador(tArbolBinBusq *,char *);
 

@@ -26,8 +26,17 @@ int insertarArbolBinBusq(tArbolBinBusq *p, const void *d, unsigned tam, Cmp comp
         else
             return CLA_DUP;
     }
-    if (!reservarMemoriaNodo(nue, sizeof(tNodoArbol), nue->info, tam))
+
+    nue = malloc(sizeof(tNodoArbol));
+    if (nue == NULL)
         return SIN_MEM;
+
+    nue->info = malloc(tam);
+    if (nue->info == NULL)
+    {
+        free(nue);
+        return SIN_MEM;
+    }
 
     nue->tamInfo = tam;
     memcpy(nue->info, d, tam);

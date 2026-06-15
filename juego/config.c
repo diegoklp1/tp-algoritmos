@@ -48,7 +48,6 @@ int leerConfig(Config* configuracion)
     return OK;
 }
 
-
 void imprimirConfig(const Config* c)
 {
     if (!c)

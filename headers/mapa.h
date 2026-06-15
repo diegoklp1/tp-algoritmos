@@ -4,7 +4,6 @@
 #include "juego.h"
 
 int generarNumeroEntre(int ini, int fin);
-int generarMovimiento();
 int generarTablero(Config* c,Bandido* bands,tListaCD *lista);
 void mostrarPos(const void* dato,FILE* donde);
 #endif // MAPA_H_INCLUDED

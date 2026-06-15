@@ -65,9 +65,6 @@
 		<Unit filename="juego/menu.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="juego/utilidades.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -78,9 +75,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="tda/listaCDE.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="tda/pila.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>

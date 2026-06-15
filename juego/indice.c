@@ -6,7 +6,7 @@
 #include <ctype.h>
 
 
-int cmpNombreJugador(const void *a, const void *b)
+static int _cmpNombreJugador(const void *a, const void *b)
 {
     tRegistroIndice *a1 = (tRegistroIndice *)a;
     tRegistroIndice *b1 = (tRegistroIndice *)b;
@@ -27,7 +27,7 @@ static void _construirIndiceDesdeJugadores(tArbolBinBusq *indice)
             strncpy(reg.nombre, jug.nombre, MAX_NOMBRE_JUGADOR - 1);
             reg.nombre[MAX_NOMBRE_JUGADOR - 1] = '\0';
             reg.posJugadores = pos;
-            insertarArbolBinBusq(indice, &reg, sizeof(tRegistroIndice), cmpNombreJugador);
+            insertarArbolBinBusq(indice, &reg, sizeof(tRegistroIndice), _cmpNombreJugador);
         }
         pos++;
     }
@@ -50,9 +50,12 @@ void iniciarIndiceJugadores(tArbolBinBusq *indice)
 
 int guardarIndiceJugadores(const tArbolBinBusq *indice)
 {
-    FILE *pf = fopen(ARCHIVO_INDICE, "wb");
+    FILE *pf;
+    int r;
+
+    pf = fopen(ARCHIVO_INDICE, "wb");
     if (!pf) return ERROR_ARCH;
-    int r = crearDesdeArchBinArbol(pf, indice);
+    r = crearDesdeArchBinArbol(pf, indice);
     fclose(pf);
     return r;
 }
@@ -61,19 +64,21 @@ int buscarJugador(const tArbolBinBusq *indice, const char *nombre, tJugador *jug
 {
     tRegistroIndice clave;
     FILE *pf;
-
+    int leido;
+    
     strncpy(clave.nombre, nombre, MAX_NOMBRE_JUGADOR - 1);
     clave.nombre[MAX_NOMBRE_JUGADOR - 1] = '\0';
     clave.posJugadores = -1;
 
-    if (!buscarElemArbolBinBusq(indice, &clave, sizeof(tRegistroIndice), cmpNombreJugador))
+    if (!buscarElemArbolBinBusq(indice, &clave, sizeof(tRegistroIndice), _cmpNombreJugador))
         return 0;
 
     pf = fopen(ARCHIVO_JUGADORES, "rb");
+    
     if (!pf) return 0;
 
     fseek(pf, clave.posJugadores * (long)sizeof(tJugador), SEEK_SET);
-    int leido = (int)fread(jug, sizeof(tJugador), 1, pf);
+    leido = (int)fread(jug, sizeof(tJugador), 1, pf);
     fclose(pf);
 
     return leido == 1;
@@ -96,7 +101,7 @@ int altaJugador(tArbolBinBusq *indice, char *nombre)
     strncpy(clavePrueba.nombre, nombre, MAX_NOMBRE_JUGADOR - 1);
     clavePrueba.nombre[MAX_NOMBRE_JUGADOR - 1] = '\0';
     clavePrueba.posJugadores = -1;
-    if (buscarElemArbolBinBusq(indice, &clavePrueba, sizeof(tRegistroIndice), cmpNombreJugador))
+    if (buscarElemArbolBinBusq(indice, &clavePrueba, sizeof(tRegistroIndice), _cmpNombreJugador))
         return CLA_DUP;
 
     pf = fopen(ARCHIVO_JUGADORES, "ab+");
@@ -114,7 +119,7 @@ int altaJugador(tArbolBinBusq *indice, char *nombre)
 
     reg.posJugadores = cantReg;
 
-    return insertarArbolBinBusq(indice, &reg, sizeof(tRegistroIndice), cmpNombreJugador);
+    return insertarArbolBinBusq(indice, &reg, sizeof(tRegistroIndice), _cmpNombreJugador);
 }
 
 int bajaJugador(tArbolBinBusq *indice, const char *nombre)
@@ -127,7 +132,7 @@ int bajaJugador(tArbolBinBusq *indice, const char *nombre)
     clave.nombre[MAX_NOMBRE_JUGADOR - 1] = '\0';
     clave.posJugadores = -1;
 
-    if (!buscarElemArbolBinBusq(indice, &clave, sizeof(tRegistroIndice), cmpNombreJugador))
+    if (!buscarElemArbolBinBusq(indice, &clave, sizeof(tRegistroIndice), _cmpNombreJugador))
         return 0;
 
     /* Marca el registro en el .bin con nombre vacío para señalarlo como eliminado */
@@ -142,7 +147,7 @@ int bajaJugador(tArbolBinBusq *indice, const char *nombre)
     }
     fclose(pf);
 
-    return eliminarElemArbolBinBusq(indice, &clave, sizeof(tRegistroIndice), cmpNombreJugador);
+    return eliminarElemArbolBinBusq(indice, &clave, sizeof(tRegistroIndice), _cmpNombreJugador);
 }
 
 int actualizarJugador(const tArbolBinBusq *indice, const char *nombre, int puntosNuevos)
@@ -155,7 +160,7 @@ int actualizarJugador(const tArbolBinBusq *indice, const char *nombre, int punto
     clave.nombre[MAX_NOMBRE_JUGADOR - 1] = '\0';
     clave.posJugadores = -1;
 
-    if (!buscarElemArbolBinBusq(indice, &clave, sizeof(tRegistroIndice), cmpNombreJugador))
+    if (!buscarElemArbolBinBusq(indice, &clave, sizeof(tRegistroIndice), _cmpNombreJugador))
         return 0;
 
     pf = fopen(ARCHIVO_JUGADORES, "r+b");
@@ -191,13 +196,19 @@ static int cmpPuntosDesc(const void *a1, const void *b1)
 
 void mostrarRankingPorPuntos()
 {
-    FILE *fp = fopen(ARCHIVO_JUGADORES, "rb");
+    FILE *fp;
+    int cant;
+    tJugador* vec;
+    int posicion;
+    unsigned i;
+    
+    fp = fopen(ARCHIVO_JUGADORES, "rb");
     if (!fp) {
         printf("No hay jugadores registrados.\n");
         return;
     }
     fseek(fp, 0L, SEEK_END);
-    int cant = ftell(fp) /sizeof(tJugador);
+    cant = ftell(fp) /sizeof(tJugador);
     rewind(fp);
 
     if (cant == 0) {
@@ -205,7 +216,7 @@ void mostrarRankingPorPuntos()
         printf("No hay jugadores registrados.\n");
         return;
     }
-    tJugador* vec = malloc(cant * sizeof(tJugador));
+    vec = malloc(cant * sizeof(tJugador));
     if (!vec)
     {
         fclose(fp);
@@ -223,8 +234,8 @@ void mostrarRankingPorPuntos()
         "POS", "JUGADOR", "PUNTOS", "PARTIDAS");
     printf("----------------------------------------------------------\n");
 
-    int posicion = 1;
-    for (unsigned i = 0; i < cant; i++)
+    posicion = 1;
+    for (i = 0; i < cant; i++)
     {
         if (vec[i].nombre[0] != '\0')
         {
@@ -236,6 +247,7 @@ void mostrarRankingPorPuntos()
     fclose(fp);
     free(vec);
 }
+
 void loginJugador(tArbolBinBusq *indice, char* nombreFinal) {
     tJugador jug;
     int nombreConfirmado = 0;
