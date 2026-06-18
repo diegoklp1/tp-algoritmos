@@ -28,5 +28,5 @@ void*       obtenerInfoNodo(const tNodoLCDE* nodo);
 tNodoLCDE*  siguienteNodo(const tNodoLCDE* nodo);
 tNodoLCDE*  anteriorNodo(const tNodoLCDE* nodo);
 tNodoLCDE*  obtenerPrimeroLista(const tListaCD* p);
-
+tNodoLCDE* buscarNodo(tListaCD* p, void* d, int(*comparar)(const void*, const void*));
 #endif // LISTACDE_H_INCLUDED

@@ -99,7 +99,6 @@ void imprimirConfig(const Config* c);
 
 tNodoLCDE* destinoJugador(tNodoLCDE* posActual, int pasos, int direccion);
 tNodoLCDE* destinoBandido(tNodoLCDE* posActual,tNodoLCDE* destJugador ,int pasosBandido,int casillas);
-tNodoLCDE* obtenerNodoPorPosicion(tListaCD* lista, int posicionBuscada);
 int calcularDireccionBandido(tNodoLCDE*posActualB,tNodoLCDE*destJugador,int totalCasillas);
 tNodoLCDE* obtenerNodoPorPosicion(tListaCD* lista, int posicionBuscada);
 
@@ -108,5 +107,5 @@ void planificarTurnoBandidos(Bandido* bandidos, int cantBandidos, tNodoLCDE* des
 void actualizarPosiciones(tCola *colaTurnos);
 void verificarChoques(JugadorPartida* jugador, Bandido* bandidos, int cantBandidos, tListaCD* mapa);
 void mostrarHistorialMovimientos(tCola* historial);
-
+void inicializarJugador(JugadorPartida *j, const char *nombreJugador, int vidasInicio, tListaCD *mapa);
 #endif // JUEGO_H_INCLUDED

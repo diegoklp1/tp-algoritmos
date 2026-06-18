@@ -65,7 +65,7 @@ int buscarJugador(const tArbolBinBusq *indice, const char *nombre, tJugador *jug
     tRegistroIndice clave;
     FILE *pf;
     int leido;
-    
+
     strncpy(clave.nombre, nombre, MAX_NOMBRE_JUGADOR - 1);
     clave.nombre[MAX_NOMBRE_JUGADOR - 1] = '\0';
     clave.posJugadores = -1;
@@ -74,7 +74,7 @@ int buscarJugador(const tArbolBinBusq *indice, const char *nombre, tJugador *jug
         return 0;
 
     pf = fopen(ARCHIVO_JUGADORES, "rb");
-    
+
     if (!pf) return 0;
 
     fseek(pf, clave.posJugadores * (long)sizeof(tJugador), SEEK_SET);
@@ -201,7 +201,7 @@ void mostrarRankingPorPuntos()
     tJugador* vec;
     int posicion;
     unsigned i;
-    
+
     fp = fopen(ARCHIVO_JUGADORES, "rb");
     if (!fp) {
         printf("No hay jugadores registrados.\n");
@@ -261,7 +261,7 @@ void loginJugador(tArbolBinBusq *indice, char* nombreFinal) {
     while (!nombreConfirmado) {
         // Buscamos si el nombre ingresado ya existe en el arbol
         if (buscarJugador(indice, nombreFinal, &jug)) {
-            printf("\nSe encontro un usuario con ese nombre. ¿Eres tu? (y/n): ");
+            printf("\nSe encontro un usuario con ese nombre. Eres tu? (y/n): ");
             scanf(" %c", &respuesta);
             while(getchar() != '\n'); // Limpiamos el buffer
 

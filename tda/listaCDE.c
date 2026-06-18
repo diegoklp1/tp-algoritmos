@@ -241,3 +241,24 @@ tNodoLCDE* obtenerPrimeroLista(const tListaCD* p)
     if (p == NULL || *p == NULL) return NULL;
     return *p;
 }
+tNodoLCDE* buscarNodo(tListaCD* p, void* d, int(*comparar)(const void*, const void*))
+{
+    if (*p == NULL)
+        return NULL;
+
+    tNodoLCDE* aux = *p;
+    if (comparar(aux->info, d) == 1)
+    {
+        return aux; //se encontro el dato
+    }
+    aux = aux->sig;
+    while (aux != *p)
+    {
+        if (comparar(aux->info, d) == 1)
+        {
+            return aux;  //se encontro el dato
+        }
+        aux = aux->sig;
+    }
+    return NULL; //no se encontro
+}

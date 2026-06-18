@@ -33,13 +33,7 @@ int main()
         generarTablero(&configuracion,listaBandidos,&mapa);
 
         JugadorPartida Jugador;
-        strncpy(Jugador.nombre, nombreJugador, sizeof(Jugador.nombre) - 1);
-        Jugador.vidas=configuracion.vidas_inicio;
-        Jugador.posicion_actual=obtenerPrimeroLista(&mapa);
-        Jugador.puntos=0;
-        Jugador.movimientos=0;
-        Jugador.protegido_por_oasis=false;
-        Jugador.pierde_proximo_turno=false;
+       inicializarJugador(&Jugador,nombreJugador,configuracion.vidas_inicio,&mapa);
 
 
         int gano=0;
@@ -56,7 +50,6 @@ int main()
                 planificarTurnoJugador(&Jugador, &colaTurnos, &destinoJugador,&colaHistorialMovs);
             else
             {
-                printf("Caiste en una tormenta! perdiste tu turno.. los bandidos avanzan hacia ti..");
                 destinoJugador=Jugador.posicion_actual;
                 Jugador.pierde_proximo_turno=false;
             }
@@ -88,10 +81,10 @@ int main()
         else
             printf("Mala suerte! los bandidos acabaron contigo. Partida terminada!\n");
 
-        
+
         actualizarJugador(&indice, nombreJugador, Jugador.puntos);
         guardarPartida(nombreJugador, Jugador.puntos, Jugador.movimientos, gano);
-        
+
         vaciarCola(&colaTurnos);
         vaciarListaCD(&mapa);
         mostrarHistorialMovimientos(&colaHistorialMovs);

@@ -1,5 +1,5 @@
 #include "../headers/juego.h"
-#include "../headers/main.h" //ver si así está bien(que solicite ambos .h o separar en otro .h)
+#include "../headers/main.h"
 #include "../headers/tda/listaCDE.h"
 
 int generarNumeroEntre(int ini, int fin)
@@ -13,7 +13,7 @@ void mostrarPos(const void* dato, FILE* donde) {
     int i;
     if(pos == NULL) return;
 
-    //ImprimO el numero (2 digitos), el terreno y un espacio
+    //Imprimo el numero (2 digitos), el terreno y un espacio
     fprintf(donde, "%02d %c ", pos->pos, pos->terreno);
 
     // Si la casilla esta sin bandidos ni jugador, imprime un punto
@@ -64,7 +64,7 @@ void agregarTerreno(tListaCD* lista, char tipoTerreno, int cantidadMaxima, int n
     NodoRuta pos;
     NodoRuta buscado;
     NodoRuta nuevo;
-    
+
     for(i = 0; i < cantidadMaxima; i++) {
         //Hay que verificar que el terreno este vacio
         do {
@@ -92,8 +92,8 @@ void agregarPersonaje(tListaCD* lista, char elemento, int cantidadMaxima, int nu
     int numero;
     NodoRuta pos;
     NodoRuta buscado;
-    NodoRuta nuevo;
-    
+
+
     for(i = 0; i < cantidadMaxima; i++) {
         do {
             numero = generarNumeroEntre(1, numeroEspacios-1);
@@ -108,11 +108,8 @@ void agregarPersonaje(tListaCD* lista, char elemento, int cantidadMaxima, int nu
         } while(pos.terreno != VACIO || pos.hay_jugador == true || pos.cant_bandidos > 0);
          //Verificar si puede haber terreno y bandido en el mismo lugar
 
-        nuevo.pos = numero;
-        nuevo.terreno = VACIO;
-        nuevo.hay_jugador = false;
-        nuevo.cant_bandidos = 1;
-        modificarValor(lista, &pos, sizeof(NodoRuta), compararPosicion, accionAgregarBandido, &nuevo);
+
+        modificarValor(lista, &pos, sizeof(NodoRuta), compararPosicion, accionAgregarBandido, NULL);
         //Inicializamos al bandido, le damos su id y su posicion dentro del tablero
         (arrayBandidos + i)->id = i + 1;
         (arrayBandidos + i)->posicion_actual = obtenerNodoPorPosicion(lista, numero);
@@ -120,28 +117,11 @@ void agregarPersonaje(tListaCD* lista, char elemento, int cantidadMaxima, int nu
 }
 
 tNodoLCDE* obtenerNodoPorPosicion(tListaCD* lista, int posicionBuscada) {
-    if (*lista == NULL)
-        {
-        return NULL;
-        }
+   NodoRuta buscado;
+    buscado.pos = posicionBuscada;
 
-    tNodoLCDE* aux = *lista;
-    if (((NodoRuta*)obtenerInfoNodo(aux))->pos == posicionBuscada)
-        {
-        return aux;
-        }
-        aux = siguienteNodo(aux); //si no es la primera posicion, buscamos el resto
-    while (aux != *lista)
-    {
-        NodoRuta* info = (NodoRuta*)obtenerInfoNodo(aux);
-        if (info->pos == posicionBuscada)
-        {
-            return aux; //Encontramos el nodo
-        }
-        aux = siguienteNodo(aux);
-    }
-
-    return NULL;
+    //le pasamos la posicion q buscamos a nuestra funcion generica del tda lista
+    return buscarNodo(lista, &buscado, compararPosicion);
 }
 
 int generarTablero(Config* c,Bandido* arrayBandidos,tListaCD *lista)
@@ -150,19 +130,19 @@ int generarTablero(Config* c,Bandido* arrayBandidos,tListaCD *lista)
    NodoRuta t;
    NodoRuta f;
    int i;
-   
+
    tableroArch = fopen(NOMBRE_ARCHIVO_TABLERO, "w+t");
    if(!tableroArch)
    {
        return ERROR;
    }
 
-   if (c->maximo_bandidos >= c->cantidad_posiciones - 2) 
+   if (c->maximo_bandidos >= c->cantidad_posiciones - 2)
    {
         printf("Error: demasiados bandidos para garantizar solucion posible.\n");
         return ERROR;
    }
-   
+
     t.pos = 1;
     t.terreno = INICIO;
     t.hay_jugador = true;
@@ -193,4 +173,16 @@ int generarTablero(Config* c,Bandido* arrayBandidos,tListaCD *lista)
     //vaciarListaCD(&lista);
     fclose(tableroArch);
     return 1;
+}
+void inicializarJugador(JugadorPartida *j, const char *nombreJugador, int vidasInicio, tListaCD *mapa)
+{
+    strncpy(j->nombre, nombreJugador, sizeof(j->nombre) - 1);
+    j->nombre[sizeof(j->nombre) - 1] = '\0';
+
+    j->vidas = vidasInicio;
+    j->posicion_actual = obtenerPrimeroLista(mapa);
+    j->puntos = 0;
+    j->movimientos = 0;
+    j->protegido_por_oasis = false;
+    j->pierde_proximo_turno = false;
 }

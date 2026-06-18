@@ -71,14 +71,14 @@ void ingresarYValidarNombre(char* nombre)
     while (!valido) {
         printf("Ingrese su nombre de jugador (max 20 caracteres): ");
         if (fgets(nombre, 21, stdin) != NULL) {
-            // Remover el salto de l�nea generado por fgets
+            //Remover el salto de linea generado por fgets
             nombre[strcspn(nombre, "\n")] = 0;
 
-            // Validar que el nombre no est� vac�o
+            // Validar que el nombre no este vacio
             if (strlen(nombre) > 0) {
                 valido = 1;
             } else {
-                printf("Error: El nombre no puede estar vac�o.\n");
+                printf("Error: El nombre no puede estar vacio.\n");
             }
         }
     }
