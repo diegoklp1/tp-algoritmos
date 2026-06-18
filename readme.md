@@ -47,7 +47,7 @@ El juego genera y usa los siguientes archivos en la raíz del proyecto:
 | `jugadores.idx` | Índice del árbol binario de búsqueda |
 | `partidas.bin` | Historial de partidas jugadas |
 
-Decidimos dejar los archivos con algunos datos de prueba para tener al alcance para probar, para empezar de cero se puede borrarlos para que se vuelvan a generar (menos el de config.txt)
+Decidimos dejar los archivos con algunos datos de prueba para tener al alcance para probar, para empezar de cero puede borrarlos para que se vuelvan a generar (menos el de config.txt)
 
 ## Algunas decisiones que tomamos
 
